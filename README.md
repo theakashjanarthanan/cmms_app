@@ -131,4 +131,8 @@ To start the frontend:
 
    - Make sure you are running the frontend server using `npm start` in the `frontend` directory.
 
+<<<<<<< HEAD
  
+=======
+ 
+>>>>>>> 097e6ab22e4c30663bc454428be36c87269188f8
