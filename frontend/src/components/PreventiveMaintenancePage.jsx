@@ -24,7 +24,6 @@ import {
   InputLabel,
   Select,
   CircularProgress,
-  TablePagination,
   Snackbar,
   Alert,
 } from "@mui/material";
@@ -38,12 +37,12 @@ import {
   fetchPMById,
   updatePM,
   deletePM,
-} from "../api/api"; // Assuming these API functions exist
+} from "../api/api";  
 
-// Icons
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import PreventiveMaintenanceTable from './PreventiveMaintenanceDialogs/PreventiveMaintenanceTable';                 // Table Component
+import PreventiveMaintenanceViewDialog from './PreventiveMaintenanceDialogs/PreventiveMaintenanceViewDialog';       // View Dialog Component
+import PreventiveMaintenanceEditDialog from './PreventiveMaintenanceDialogs/PreventiveMaintenanceEditDialog';       // Create Dialog Component
+import PreventiveMaintenanceDeleteDialog from './PreventiveMaintenanceDialogs/PreventiveMaintenanceDeleteDialog';   // Delete Dialog Component
 
 const PreventiveMaintenancePage = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -784,373 +783,52 @@ const PreventiveMaintenancePage = () => {
           </DialogActions>
         </Dialog>
 
-        {/* Table Displaying Preventive Maintenance Records */}
+        
         <Box sx={{ width: "100%", marginTop: 4 }}>
-          <TableContainer
-            component={Paper}
-            className="table-container shadow-xl rounded-xl mt-5 mb-5 p-8"
-            sx={{ overflowX: "auto" }} // Horizontal scroll added
-          >
-            <Table>
-              <TableHead>
-                <TableRow className="bg-gray-100 text-gray-700 font-semibold text-center">
-                  <TableCell className="font-semibold py-4 px-8">
-                    S No
-                  </TableCell>{" "}
-                  {/* Increased padding */}
-                  <TableCell className="font-semibold py-4 px-8">
-                    Display Name
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Title
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Asset Name
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Asset Location
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Category
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Worker
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Team
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Priority
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Date Created
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Date Updated
-                  </TableCell>
-                  <TableCell className="font-semibold py-4 px-8">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedPMs.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={12}
-                      align="center"
-                      className="no-data py-6"
-                    >
-                      No preventive maintenance records available.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  sortedPMs
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((pm, index) => (
-                      <TableRow
-                        key={pm._id}
-                        className="hover:bg-gray-50 transition-all"
-                        style={{ height: "70px" }} // Increased row height
-                      >
-                        <TableCell className="px-8 py-4 text-center font-medium">
-                          {index + 1 + page * rowsPerPage}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.displayName}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.title}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.asset.name}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.location}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.category}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.worker.fullName}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.team.name}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {pm.priority}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {new Date(pm.createdAt).toLocaleString()}
-                        </TableCell>
-                        <TableCell className="px-8 py-4 font-medium">
-                          {new Date(pm.updatedAt).toLocaleString()}
-                        </TableCell>
-                        <TableCell className="px-8 py-4">
-                          <div className="flex justify-center gap-10">
-                            {" "}
-                            {/* Increased gap between icons */}
-                            <VisibilityIcon
-                              className="action-icon view-icon text-blue-500"
-                              sx={{ fontSize: 28 }} // Increased icon size
-                              onClick={() => handleViewClick(pm._id)}
-                            />
-                            <EditIcon
-                              className="action-icon edit-icon text-green-500"
-                              sx={{ fontSize: 28 }} // Increased icon size
-                              onClick={() => handleEditClick(pm)}
-                            />
-                            <DeleteIcon
-                              className="action-icon delete-icon text-red-500"
-                              sx={{ fontSize: 28 }} // Increased icon size
-                              onClick={() => handleDeleteClick(pm._id)}
-                            />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          {/* Table Pagination */}
-          <TablePagination
-            component="div"
-            count={pms.length}
+          
+          {/* Table Displaying Preventive Maintenance Records */}
+          <>
+          <PreventiveMaintenanceTable
+            sortedPMs={sortedPMs}
             page={page}
-            onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            rowsPerPageOptions={[5, 10, 25]}
-            className="pagination-container"
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            handleViewClick={handleViewClick}
+            handleEditClick={handleEditClick}
+            handleDeleteClick={handleDeleteClick}
+            pms={pms}
           />
-
+          </>
+          
           {/* View PM Dialog */}
-          <Dialog
+          <>
+          <PreventiveMaintenanceViewDialog
             open={openViewDialog}
-            onClose={handleCloseViewDialog}
-            maxWidth="md" // Set max width to make it look more consistent
-            fullWidth
-          >
-            <DialogTitle>Preventive Maintenance Details</DialogTitle>
-            <DialogContent>
-              {pmDetails && (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "20px",
-                  }}
-                >
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Asset:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.asset.name}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Location:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.location}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Start Date:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {new Date(pmDetails.startDate).toLocaleDateString()}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Due Date:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {new Date(pmDetails.dueDate).toLocaleDateString()}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Worker:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.worker.fullName}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Team:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.team.name}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Title:</strong>
-                    </Typography>
-                    <Typography variant="body2">{pmDetails.title}</Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Display Name:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.displayName}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Description:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.description}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Priority:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.priority}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography variant="subtitle1" gutterBottom>
-                      <strong>Category:</strong>
-                    </Typography>
-                    <Typography variant="body2">
-                      {pmDetails.category}
-                    </Typography>
-                  </div>
-                </div>
-              )}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseViewDialog} color="primary">
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
+            handleClose={handleCloseViewDialog}
+            pmDetails={pmDetails}
+          />
+          </>
 
           {/* Edit Dialog */}
-          <Dialog open={openEditDialog} onClose={handleCloseDialog}>
-            <DialogTitle>Edit Preventive Maintenance</DialogTitle>
-            <DialogContent>
-              <TextField
-                label="Title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Display Name"
-                name="displayName"
-                value={formData.displayName}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Start Date"
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                label="Due Date"
-                type="date"
-                name="dueDate"
-                value={formData.dueDate}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <TextField
-                label="Priority"
-                name="priority"
-                value={formData.priority}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Location"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDialog} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleSubmit} color="primary">
-                Done
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <>
+          <PreventiveMaintenanceEditDialog
+            open={openEditDialog}
+            handleCloseDialog={handleCloseDialog}
+            formData={formData}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+          />
+          </>
 
           {/* Delete Confirmation Dialog */}
-          <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
-            <DialogTitle>Are you sure?</DialogTitle>
-            <DialogContent>
-              <p>Do you want to delete this Preventive Maintenance record?</p>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteCancel} color="primary">
-                No
-              </Button>
-              <Button onClick={handleDeleteConfirm} color="secondary">
-                Yes
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <>
+          <PreventiveMaintenanceDeleteDialog
+            open={openDeleteDialog}
+            handleDeleteCancel={handleDeleteCancel}
+            handleDeleteConfirm={handleDeleteConfirm}
+          />
+          </>
 
           {/* Snackbar for notifications */}
           <Snackbar

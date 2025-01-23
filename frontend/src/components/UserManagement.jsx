@@ -23,14 +23,20 @@ import {
   InputLabel,
   TextField,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 
-import API from "../api/api"; // Ensure the API module is correctly configured
+import API from "../api/api";
 import Sidebar from "./Sidebar";
+import { Add as AddIcon } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";  
+import EditIcon from "@mui/icons-material/Edit";
+import CircularProgress from "@mui/material/CircularProgress";
+import WarningIcon from "@mui/icons-material/Warning";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 
+import styles from "../styles/usermanagement.module.css";
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]); // Users for table
@@ -48,7 +54,6 @@ const UserManagement = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // 'success' or 'error'
 
-
   // Add User functionality
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [newUsers, setNewUsers] = useState([
@@ -61,7 +66,7 @@ const UserManagement = () => {
     "Manager",
     "Technician",
     "Guest",
-    "Requestor"
+    "Requestor",
   ]; // Available roles
 
   // Fetch users on component mount
@@ -98,7 +103,10 @@ const UserManagement = () => {
 
   // Add another user form
   const handleAddAnotherUser = () => {
-    setNewUsers([...newUsers, { fullName: "", email: "", password: "", role: "Guest" }]);
+    setNewUsers([
+      ...newUsers,
+      { fullName: "", email: "", password: "", role: "Guest" },
+    ]);
   };
 
   // Handle adding users functionality
@@ -117,9 +125,9 @@ const UserManagement = () => {
         newUsers.map(async (user) => {
           const response = await API.post("/auth/register", user);
           return response.data;
-        })
+        }),
       );
-  
+
       setSnackbarMessage("Users added successfully!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true); // Open the Snackbar
@@ -164,8 +172,8 @@ const UserManagement = () => {
       // Update the UI with the new user role
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user._id === selectedUser._id ? { ...user, role } : user
-        )
+          user._id === selectedUser._id ? { ...user, role } : user,
+        ),
       );
       setMessage("Role updated successfully!");
       setMessageType("success");
@@ -201,14 +209,14 @@ const UserManagement = () => {
       // API call to delete the user
       await API.delete(`/auth/users/${selectedUserId}`);
       setUsers((prev) => prev.filter((user) => user._id !== selectedUserId));
-  
+
       // Set success message for Snackbar
       setSnackbarMessage("User deleted successfully!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true); // Show Snackbar
     } catch (error) {
       console.error("Error deleting user:", error);
-  
+
       // Set error message for Snackbar
       setSnackbarMessage("Failed to delete user. Please try again.");
       setSnackbarSeverity("error");
@@ -217,7 +225,6 @@ const UserManagement = () => {
       setConfirmOpen(false); // Close confirmation dialog
     }
   };
-
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -235,12 +242,13 @@ const UserManagement = () => {
           variant="contained"
           color="primary"
           onClick={handleOpenAddDialog}
-          sx={{ mb: 2 }}
+          className={styles.createButton}
+          startIcon={<AddIcon />}
         >
           Add User
         </Button>
 
-          <Snackbar
+        <Snackbar
           open={snackbarOpen}
           autoHideDuration={6000}
           onClose={() => setSnackbarOpen(false)}
@@ -258,70 +266,66 @@ const UserManagement = () => {
           </Alert>
         </Snackbar>
 
-{/* Users Table */}
-<TableContainer
-  component={Paper}
-  className="table-container shadow-xl rounded-xl mt-5 mb-5 p-6"
->
-  <Table>
-    <TableHead>
-      <TableRow className="bg-gray-100 text-gray-700 font-semibold text-center">
-        <TableCell className="font-semibold">S. No.</TableCell>
-        <TableCell className="font-semibold">Name</TableCell>
-        <TableCell className="font-semibold">Email</TableCell>
-        <TableCell className="font-semibold">Role</TableCell>
-        <TableCell className="font-semibold">Actions</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {users.length === 0 ? (
-        <TableRow>
-          <TableCell colSpan={5} align="center" className="no-data">
-            No users available.
-          </TableCell>
-        </TableRow>
-      ) : (
-        users
-          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          .map((user, index) => (
-            <TableRow
-              key={user._id}
-              className="hover:bg-gray-50 transition-all table-row"
-            >
-              <TableCell className="px-4 py-3 text-center font-medium">
-                {page * rowsPerPage + index + 1}
-              </TableCell>
-              <TableCell className="px-4 py-3 font-medium">
-                {user.fullName}
-              </TableCell>
-              <TableCell className="px-4 py-3 font-medium">
-                {user.email}
-              </TableCell>
-              <TableCell className="px-4 py-3 font-medium">
-                {user.role}
-              </TableCell>
-              <TableCell className="px-4 py-3">
-                <div className="flex justify-center gap-6">
-                  <EditIcon
-                    className="action-icon edit-icon"
-                    onClick={() => handleOpenEditDialog(user)}
-                  />
-                  <DeleteIcon
-                    className="action-icon delete-icon"
-                    onClick={() => handleOpenConfirmDialog(user._id)}
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))
-      )}
-    </TableBody>
-  </Table>
-</TableContainer>
-
-
-
-
+        {/* Users Table */}
+        <TableContainer
+          component={Paper}
+          className="table-container shadow-xl rounded-xl mt-5 mb-5 p-6"
+        >
+          <Table>
+            <TableHead>
+              <TableRow className="bg-gray-100 text-gray-700 font-semibold text-center">
+                <TableCell className="font-semibold">S. No.</TableCell>
+                <TableCell className="font-semibold">Name</TableCell>
+                <TableCell className="font-semibold">Email</TableCell>
+                <TableCell className="font-semibold">Role</TableCell>
+                <TableCell className="font-semibold">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center" className="no-data">
+                    No users available.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                users
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((user, index) => (
+                    <TableRow
+                      key={user._id}
+                      className="hover:bg-gray-50 transition-all table-row"
+                    >
+                      <TableCell className="px-4 py-3 text-center font-medium">
+                        {page * rowsPerPage + index + 1}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 font-medium">
+                        {user.fullName}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 font-medium">
+                        {user.email}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 font-medium">
+                        {user.role}
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        <div className="flex justify-center gap-6">
+                          <EditIcon
+                            className="action-icon edit-icon"
+                            onClick={() => handleOpenEditDialog(user)}
+                          />
+                          <DeleteIcon
+                            className="action-icon delete-icon"
+                            onClick={() => handleOpenConfirmDialog(user._id)}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
         <TablePagination
           rowsPerPageOptions={[5, 10, 25, 50]}
@@ -334,20 +338,23 @@ const UserManagement = () => {
           className="pagination-container"
         />
 
-
-
         {/* Edit User Dialog */}
         <Dialog open={openEditDialog} onClose={handleCloseEditDialog} fullWidth>
-          <DialogTitle>Edit User</DialogTitle>
-          <DialogContent>
-            <Typography variant="h6">Full Name: {selectedUser?.fullName}</Typography>
-            <Typography variant="h6">Email: {selectedUser?.email}</Typography>
+          <DialogTitle className={styles.dialogTitle}>Edit User</DialogTitle>
+          <DialogContent className={styles.dialogContent}>
+            <Typography variant="h6" className={styles.userInfo}>
+              Full Name: {selectedUser?.fullName}
+            </Typography>
+            <Typography variant="h6" className={styles.userInfo}>
+              Email: {selectedUser?.email}
+            </Typography>
             <FormControl fullWidth margin="normal">
-              <InputLabel>Role</InputLabel>
+              <InputLabel className={styles.roleLabel}>Role</InputLabel>
               <Select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 label="Role"
+                className={styles.selectRole}
               >
                 {roles.map((roleOption) => (
                   <MenuItem key={roleOption} value={roleOption}>
@@ -357,11 +364,19 @@ const UserManagement = () => {
               </Select>
             </FormControl>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseEditDialog} color="primary">
+          <DialogActions className={styles.dialogActions}>
+            <Button
+              onClick={handleCloseEditDialog}
+              color="primary"
+              className={styles.cancelButton}
+            >
               Cancel
             </Button>
-            <Button onClick={handleRoleChange} color="primary">
+            <Button
+              onClick={handleRoleChange}
+              color="primary"
+              className={styles.saveButton}
+            >
               Save Changes
             </Button>
           </DialogActions>
@@ -378,11 +393,7 @@ const UserManagement = () => {
             <Button onClick={() => setConfirmOpen(false)} color="primary">
               Cancel
             </Button>
-            <Button
-              onClick={handleConfirmDelete}
-              color="error"
-              autoFocus
-            >
+            <Button onClick={handleConfirmDelete} color="error" autoFocus>
               Confirm
             </Button>
           </DialogActions>
@@ -393,11 +404,12 @@ const UserManagement = () => {
           open={openAddDialog}
           onClose={handleCloseAddDialog}
           fullWidth
+          className={styles.addUserDialog}
         >
-          <DialogTitle>Add User</DialogTitle>
-          <DialogContent>
+          <DialogTitle className={styles.dialogTitle}>Add User</DialogTitle>
+          <DialogContent className={styles.dialogContent}>
             {newUsers.map((user, index) => (
-              <Box key={index} sx={{ mb: 2 }}>
+              <Box key={index} className={styles.userInputContainer}>
                 <TextField
                   label="Full Name"
                   name="fullName"
@@ -405,6 +417,7 @@ const UserManagement = () => {
                   onChange={(e) => handleInputChange(index, e)}
                   fullWidth
                   margin="normal"
+                  className={styles.inputField}
                 />
                 <TextField
                   label="Email"
@@ -413,6 +426,7 @@ const UserManagement = () => {
                   onChange={(e) => handleInputChange(index, e)}
                   fullWidth
                   margin="normal"
+                  className={styles.inputField}
                 />
                 <TextField
                   label="Password"
@@ -422,8 +436,13 @@ const UserManagement = () => {
                   onChange={(e) => handleInputChange(index, e)}
                   fullWidth
                   margin="normal"
+                  className={styles.inputField}
                 />
-                <FormControl fullWidth margin="normal">
+                <FormControl
+                  fullWidth
+                  margin="normal"
+                  className={styles.inputField}
+                >
                   <InputLabel>Role</InputLabel>
                   <Select
                     value={user.role}
@@ -444,15 +463,27 @@ const UserManagement = () => {
               variant="outlined"
               color="secondary"
               onClick={handleAddAnotherUser}
+              className={styles.addAnotherButton}
+              startIcon={<AddIcon />}
             >
               Add Another User
             </Button>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseAddDialog} color="primary">
+          <DialogActions className={styles.dialogActions}>
+            <Button
+              onClick={handleCloseAddDialog}
+              color="primary"
+              className={styles.cancelButton}
+              startIcon={<CloseIcon />}
+            >
               Cancel
             </Button>
-            <Button onClick={handleAddUsers} color="primary">
+            <Button
+              onClick={handleAddUsers}
+              color="primary"
+              className={styles.addUsersButton}
+              startIcon={<AddIcon />}
+            >
               Add Users
             </Button>
           </DialogActions>
@@ -462,27 +493,48 @@ const UserManagement = () => {
         <Dialog
           open={openConfirmationDialog}
           onClose={handleCancelAddUsers}
+          className={styles.confirmationDialog}
         >
-          <DialogTitle>
-            {isAddingUsers ? "Adding..." : `Are you sure you want to add ${newUsers.length} users?`}
+          <DialogTitle className={styles.dialogTitle}>
+            {isAddingUsers ? (
+              <div className={styles.dialogHeader}>
+                <CircularProgress size={20} className={styles.loadingIcon} />
+                Adding...
+              </div>
+            ) : (
+              <div className={styles.dialogHeader}>
+                <WarningIcon className={styles.warningIcon} />
+                {`Are you sure you want to add ${newUsers.length} users?`}
+              </div>
+            )}
           </DialogTitle>
-          <DialogActions>
-            <Button onClick={handleCancelAddUsers} color="primary">
+          <DialogActions className={styles.dialogActions}>
+            <Button
+              onClick={handleCancelAddUsers}
+              className={`${styles.dialogButton} ${styles.cancelButton}`}
+            >
+              <CloseIcon className={styles.buttonIcon} />
               Cancel
             </Button>
             <Button
               onClick={handleConfirmAddUsers}
-              color="primary"
+              className={`${styles.dialogButton} ${styles.confirmButton}`}
               disabled={isAddingUsers}
             >
+              <CheckIcon className={styles.buttonIcon} />
               {isAddingUsers ? "Adding..." : "Confirm"}
             </Button>
           </DialogActions>
         </Dialog>
 
         {/* Message Dialog */}
-        <Dialog open={messageDialogOpen} onClose={() => setMessageDialogOpen(false)}>
-          <DialogTitle>{messageType === "success" ? "Success" : "Error"}</DialogTitle>
+        <Dialog
+          open={messageDialogOpen}
+          onClose={() => setMessageDialogOpen(false)}
+        >
+          <DialogTitle>
+            {messageType === "success" ? "Success" : "Error"}
+          </DialogTitle>
           <DialogContent>
             <Typography>{message}</Typography>
           </DialogContent>
