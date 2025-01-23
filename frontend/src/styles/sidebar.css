@@ -1,0 +1,181 @@
+/* frontend/src/styles/sidebar.css */
+
+/* General styles */
+* {
+    box-sizing: border-box;
+}
+
+html, body, input, textarea, select, button {
+    font-family: Lato, "Open Sans", sans-serif;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+/* Container styles */
+.sidebar-container {
+    position: fixed;
+    top: 0;
+    width: 260px;
+    height: 100%;
+    background: rgb(50, 50, 51);
+    z-index: 21;
+    transition: transform 300ms, width 300ms;
+    transform: translateX(0);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.sidebar-container.minimized {
+    width: 70px;
+}
+
+/* Header styles */
+.sidebar-header {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 24px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    right: 10px;
+
+}
+
+.minimize-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+
+.minimize-button:hover {
+    transform: scale(1.1);
+}
+
+/* List styles */
+.sidebar-list {
+    flex-grow: 1;
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    right: 10px; 
+}
+
+/* List item styles */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #c0c0c0;
+    text-decoration: none;
+    width: 100%;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-item:hover {
+    background-color: #616161;
+    color: #ffffff;
+}
+
+/* Icon styles */
+.sidebar-icon {
+    min-width: 40px;
+    color: #888;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-icon.hidden {
+    visibility: hidden;
+}
+
+/* Text styles */
+.sidebar-text {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.sidebar-container.minimized .sidebar-text {
+    display: none;
+}
+
+/* Divider styles */
+.sidebar-divider {
+    margin: 16px 0;
+    border-color: #444;
+}
+
+/* Logout styles */
+.logout {
+    position: fixed;
+    bottom: 0;
+    width: 260px;
+    background-color: #ffeded;
+}
+
+.logout:hover {
+    background-color: #ffd2d2;
+    color: #b71c1c;
+}
+
+.sidebar-container.minimized .logout {
+    width: 70px;
+}
+
+/* Scrollbar styles */
+.sidebar-list::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.sidebar-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.sidebar-list::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+.sidebar-list::-webkit-scrollbar-track {
+    background-color: #333;
+    border-radius: 4px;
+}
+
+/* Handle sidebar minimized state */
+.sidebar-container.minimized {
+    width: 60px; /* Minimized width */
+}
+
+.sidebar-header span {
+    display: inline-block;
+}
+
+.sidebar-header .minimize-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar-list {
+    transition: all 0.3s ease;
+}
+
+.sidebar-container.minimized .sidebar-text {
+    display: none; /* Hide text in minimized state */
+}
+
+.sidebar-container.minimized .sidebar-icon {
+    font-size: 24px; /* Smaller icons in minimized state */
+}
+

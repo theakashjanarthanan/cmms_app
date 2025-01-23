@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* General Table Styling */
+.table-container {
+  background-color: #f9fafe; /* Light background for table */
+  border-radius: 12px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  padding: 20px;
+}
+
+/* Header Styling */
+.bg-gray-100 {
+  background-color: #e9eff7; /* Softer gray-blue for header */
+}
+
+.text-gray-700 {
+  color: #1a202c; /* Tailwind gray-800 */
+}
+
+.font-semibold {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Row Hover Effect */
+.hover\:bg-gray-50:hover {
+  background-color: #eef3fc; /* Subtle hover effect */
+}
+
+.transition-all {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* No Data Styling */
+.no-data {
+  color: #64748b; /* Neutral gray for no-data text */
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* Icon Button Styling */
+.action-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.edit-icon {
+  color: #3b82f6; /* Tailwind blue-500 */
+}
+
+.edit-icon:hover {
+  color: #2563eb; /* Tailwind blue-600 */
+  transform: scale(1.15);
+}
+
+.delete-icon {
+  color: #ef4444; /* Tailwind red-500 */
+}
+
+.delete-icon:hover {
+  color: #dc2626; /* Tailwind red-600 */
+  transform: scale(1.15);
+}
+
+/* Flexbox for Centered Actions */
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-4 {
+  gap: 20px; /* Slightly larger gap for spacing */
+}
+
+/* Table Cells */
+.px-4 {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.py-2 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.table-row {
+  border-bottom: 1px solid #e2e8f0; /* Soft border for rows */
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+/* Typography Enhancements */
+.font-medium {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #4a5568; /* Tailwind gray-700 */
+}
+
+/* Row Hover Effect with Shadow */
+.hover\:bg-gray-50:hover {
+    background-color: #eef3fc; /* Subtle hover effect */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1); /* Light shadow */
+    transform: scale(1.02); /* Slight zoom effect */
+}
+
+/* Striped Rows */
+.table-row:nth-child(even) {
+    background-color: #f7fafc; /* Light gray background for even rows */
+  }
+  
+  .table-row:nth-child(odd) {
+    background-color: #ffffff; /* White background for odd rows */
+  }
+  
+/* Header Styling with Gradient */
+.bg-gray-100 {
+    background: linear-gradient(to right, #e9eff7, #f1f5f9); /* Light gradient effect */
+  }
+  
+/* Rounded Borders for Cells */
+.table-cell {
+    border-radius: 6px; /* Rounded corners for each cell */
+    border: 1px solid #e2e8f0; /* Soft border for each cell */
+  }
+
+/* No Data Row Styling */
+.no-data {
+    color: #a0aec0; /* Neutral color */
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 600;
+    padding: 20px;
+    background-color: #f7fafc;
+  }
+
+/* Mobile-Friendly Table */
+@media (max-width: 640px) {
+    .table-container {
+      padding: 10px;
+    }
+  
+    .table {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  
+    .table-cell {
+      padding: 8px;
+    }
+  }
+
+  /* Mobile Stacked Table */
+@media (max-width: 640px) {
+    .table-container {
+      padding: 8px;
+    }
+  
+    .table th,
+    .table td {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+  
+    .table th {
+      background-color: #f7fafc;
+      font-weight: bold;
+    }
+  
+    .table td {
+      border: none;
+    }
+  }
+
+  /* PAGINATION STYLING */
+
+  /* Pagination Container Styling */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background-color: #f7fafc; /* Light gray background */
+    border-top: 1px solid #e2e8f0; /* Soft border to separate from table */
+    border-radius: 8px;
+    font-family: 'Roboto', sans-serif; /* Modern font */
+  }
+  
+  /* Pagination Text */
+  .pagination-container .MuiTablePagination-caption {
+    color: #4a5568; /* Tailwind gray-700 */
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  
+  /* Rows Per Page Dropdown */
+  .pagination-container .MuiSelect-root {
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #4a5568;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  .pagination-container .MuiSelect-root:hover {
+    border-color: #3b82f6; /* Tailwind blue-500 */
+    background-color: #f1f5f9;
+  }
+  
+/* Pagination Buttons */
+.pagination-container .MuiTablePagination-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  /* Next and Previous Buttons */
+  .pagination-container .MuiIconButton-root {
+    background-color: #3b82f6; /* Tailwind blue-500 */
+    color: #ffffff;
+    border-radius: 50%;
+    padding: 2px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s ease-in-out;
+    border: 1px solid #3b82f6; /* Blue border */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  /* Hover Effect for Next and Previous Buttons */
+  .pagination-container .MuiIconButton-root:hover {
+    background-color: #2563eb; /* Tailwind blue-600 */
+    transform: scale(1.1); /* Slight zoom effect */
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    border-color: #2563eb; /* Darker blue on hover */
+  }
+  
+  /* Focus Effect */
+  .pagination-container .MuiIconButton-root:focus-visible {
+    outline: 2px solid #2563eb; /* Blue outline when focused */
+    outline-offset: 2px;
+  }
+  
+  /* Disabled State */
+  .pagination-container .MuiIconButton-root:disabled {
+    background-color: #e2e8f0; /* Tailwind gray-200 */
+    color: #cbd5e0; /* Light gray for disabled icon */
+    transform: scale(1); /* No scaling on hover */
+    border-color: #e2e8f0; /* Soft border for disabled state */
+    box-shadow: none; /* Remove shadow for disabled state */
+  }
+  
+  
+  .pagination-container .MuiIconButton-root:hover {
+    background-color: #2563eb; /* Tailwind blue-600 */
+    transform: scale(1.1);
+  }
+  
+  .pagination-container .MuiIconButton-root:disabled {
+    background-color: #e2e8f0; /* Disabled state */
+    color: #cbd5e0; /* Light gray */
+    transform: scale(1);
+  }
+  
+  /* Page Number Styling */
+  .pagination-container .MuiTablePagination-select {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  
+  /* Active Page Number */
+  .pagination-container .Mui-selected {
+    background-color: #3b82f6; /* Blue background */
+    color: #ffffff;
+    font-weight: 700;
+  }
+  
+  .pagination-container .MuiTablePagination-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  
+  
+  
+  
+  
+  
+  
+  
