@@ -27,7 +27,7 @@ import {
 } from "@mui/material";
 
 import API from "../api/api";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 import { Add as AddIcon } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -39,6 +39,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import styles from "../styles/usermanagement.module.css";
 
 const UserManagement = () => {
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false); // Sidebar minimized state
   const [users, setUsers] = useState([]); // Users for table
   const [selectedUser, setSelectedUser] = useState(null); // Selected user for editing
   const [openEditDialog, setOpenEditDialog] = useState(false); // State for Edit Dialog
@@ -53,6 +54,8 @@ const UserManagement = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // 'success' or 'error'
+
+  const sidebarWidth = isSidebarMinimized ? 70 : 250; // Sidebar width based on minimized state
 
   // Add User functionality
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -226,13 +229,25 @@ const UserManagement = () => {
     }
   };
 
+  // Toggle Sidebar minimized/maximized state
+  const toggleSidebar = () => {
+    setIsSidebarMinimized(!isSidebarMinimized);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
 
       {/* Main Content */}
-      <Box sx={{ flexGrow: 1, ml: "250px", p: 3 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          ml: `${sidebarWidth}px`, // Dynamically adjust margin-left based on sidebar width
+          transition: "margin-left 0.3s ease", // Smooth transition for layout changes
+          p: 3,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           User Management
         </Typography>
@@ -242,7 +257,6 @@ const UserManagement = () => {
           variant="contained"
           color="primary"
           onClick={handleOpenAddDialog}
-          className={styles.createButton}
           startIcon={<AddIcon />}
         >
           Add User

@@ -25,7 +25,7 @@ import {
   Alert,
   Grid
 } from '@mui/material';
-import Sidebar from './Sidebar';
+import Sidebar from "../components/Sidebar";
 import {
   fetchActiveTechnicians,
   fetchWorkOrders,
@@ -34,6 +34,7 @@ import {
 } from '../api/api';
 
 const TechnicianPortalPage = () => {
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);  // Sidebar minimized state
   const [openDialog, setOpenDialog] = useState(false);
   const [technicians, setTechnicians] = useState([]);
   const [workOrders, setWorkOrders] = useState([]);
@@ -48,6 +49,8 @@ const TechnicianPortalPage = () => {
   const [openApprovalDialog, setOpenApprovalDialog] = useState(false); // For approval status update dialog
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [selectedWorkOrder, setSelectedWorkOrder] = useState(null);
+
+  const sidebarWidth = isSidebarMinimized ? 70 : 250;  // Sidebar width based on minimized state
 
   // Fetch work orders
   useEffect(() => {
@@ -174,10 +177,24 @@ const TechnicianPortalPage = () => {
     setSelectedWorkOrder(null); // Reset selected work order when closing
   };
 
+    // Toggle Sidebar minimized/maximized state
+    const toggleSidebar = () => {
+      setIsSidebarMinimized(!isSidebarMinimized);
+    };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box sx={{ flexGrow: 1, ml: "250px", p: 3 }}>
+      {/* Sidebar Component */}
+      <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
+
+      <Box
+        sx={{
+          flexGrow: 1,
+          ml: `${sidebarWidth}px`, // Dynamically adjust margin-left based on sidebar width
+          transition: "margin-left 0.3s ease", // Smooth transition for layout changes
+          p: 3,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           Welcome to the Technician Portal
         </Typography>
@@ -190,9 +207,9 @@ const TechnicianPortalPage = () => {
         >
           Active Technicians
         </Button>
-
+ 
         {/* Active Technicians Dialog */}
-        <Dialog open={openDialog} onClose={handleClose} maxWidth="md" fullWidth>
+        <Dialog open={openDialog} onClose={handleClose} maxWidth="sm" fullWidth>
           <DialogTitle>Active Technicians</DialogTitle>
           <DialogContent>
             <TableContainer component={Paper}>

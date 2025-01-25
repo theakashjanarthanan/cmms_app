@@ -27,8 +27,7 @@ const AssetTable = ({
   handleDialogOpen,
   handleDeleteDialogOpen,
   handleChangePage,
-  handleChangeRowsPerPage,
-  isInventoryManager,
+  handleChangeRowsPerPage
 }) => {
   return (
     <TableContainer
@@ -58,15 +57,15 @@ const AssetTable = ({
               </TableSortLabel>
             </TableCell>
             <TableCell className="font-semibold py-4 px-8">
-              Display Name
+              Asset Name
             </TableCell>
             <TableCell className="font-semibold py-4 px-8">
-              Department
+             Manufacturer
             </TableCell>
             <TableCell className="font-semibold py-4 px-8">
               Serial Number
             </TableCell>
-            <TableCell className="font-semibold py-4 px-8">Warranty</TableCell>
+            <TableCell className="font-semibold py-4 px-8">Category</TableCell>
             <TableCell className="font-semibold py-4 px-8">Status</TableCell>
             <TableCell className="font-semibold py-4 px-8">Actions</TableCell>
           </TableRow>
@@ -92,16 +91,16 @@ const AssetTable = ({
                   {asset.assetID}
                 </TableCell>
                 <TableCell className="px-8 py-4 font-medium">
-                  {asset.displayName}
+                  {asset.name}
                 </TableCell>
                 <TableCell className="px-8 py-4 font-medium">
-                  {asset.department}
+                  {asset.manufacturer}
                 </TableCell>
                 <TableCell className="px-8 py-4 font-medium">
                   {asset.serialNumber}
                 </TableCell>
                 <TableCell className="px-8 py-4 font-medium">
-                  {asset.warrantyStatus}
+                  {asset.category}
                 </TableCell>
                 <TableCell className="px-8 py-4 font-medium">
                   {asset.status}
@@ -113,7 +112,7 @@ const AssetTable = ({
                       sx={{ fontSize: 28 }}
                       onClick={() => handleViewDialogOpen(asset)}
                     />
-                    {isInventoryManager && (
+ 
                       <>
                         <EditIcon
                           className="action-icon edit-icon text-green-500"
@@ -126,7 +125,7 @@ const AssetTable = ({
                           onClick={() => handleDeleteDialogOpen(asset.assetID)}
                         />
                       </>
-                    )}
+
                   </div>
                 </TableCell>
               </TableRow>

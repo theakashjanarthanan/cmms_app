@@ -34,8 +34,7 @@ const Inventory = () => {
   const [selectedPart, setSelectedPart] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
-  const [isAdjustQuantityDialogOpen, setAdjustQuantityDialogOpen] =
-    useState(false);
+  const [isAdjustQuantityDialogOpen, setAdjustQuantityDialogOpen] = useState(false);
   const [adjustment, setAdjustment] = useState(0);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");

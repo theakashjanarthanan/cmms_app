@@ -1,6 +1,4 @@
-// frontend\src\components\AssetManagement.jsx
-
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Box,
@@ -13,34 +11,35 @@ import {
   Alert,
 } from "@mui/material";
 
-import AuthContext from "../context/AuthContext";
 
-import API from "../api/api"; // API
+import Sidebar from "../components/Sidebar"; // Sidebar
+import AssetDialog from "../components/AssetManagementDialogs/AssetDialog"; // Asset Creation and Updation Dialog
+import ViewAssetDialog from "../components/AssetManagementDialogs/ViewAssetDialog"; // View Dialog
+import AssetTable from "../components/AssetManagementDialogs/AssetTable"; // Asset Table
 
-import Sidebar from "./Sidebar"; // Sidebar
-
-import AssetDialog from "./AssetManagementDialogs/AssetDialog";          // Asset Creation and Updation Dialog
-import ViewAssetDialog from "./AssetManagementDialogs/ViewAssetDialog";  // View Dialog
-import AssetTable from "./AssetManagementDialogs/AssetTable";            // Asset Table
+// Import API calls
+import {
+  fetchAssets,
+  createAsset,
+  updateAsset,
+  deleteAsset,
+} from "../api/assetapi";
 
 const AssetManagement = () => {
-  const { user } = useContext(AuthContext); // Get user info from context
-
+ 
   // States
-  const [isInventoryManager, setIsInventoryManager] = useState(false);
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [formData, setFormData] = useState({
     assetID: "",
     name: "",
-    displayName: "",
-    description: "",
+    description: null,
     status: "Operational",
-    model: "",
-    manufacturer: "",
-    serialNumber: "",
-    department: "",
-    warrantyStatus: "Warranty",
-    warrantyExpirationDate: "",
+    model: null,
+    manufacturer: null,
+    category: "None",
+    serialNumber: null,
   });
+
   const [openDialog, setOpenDialog] = useState(false);
   const [viewDialog, setViewDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -59,12 +58,13 @@ const AssetManagement = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const sidebarWidth = isSidebarMinimized ? 70 : 260;
 
   // Fetch assets and check user role
   useEffect(() => {
-    const fetchAssets = async () => {
+    const loadAssets = async () => {
       try {
-        const { data } = await API.get("/asset-management");
+        const data = await fetchAssets();
         setAssets(data);
       } catch (error) {
         console.error("Error fetching assets:", error);
@@ -76,14 +76,8 @@ const AssetManagement = () => {
       }
     };
 
-    if (user?.role === "Inventory Manager") {
-      setIsInventoryManager(true);
-    } else {
-      setIsInventoryManager(false);
-    }
-
-    fetchAssets();
-  }, [user]);
+    loadAssets();
+  }, []);
 
   // Handlers for dialogs
   const handleDialogOpen = (asset = null) => {
@@ -125,15 +119,12 @@ const AssetManagement = () => {
     setFormData({
       assetID: "",
       name: "",
-      displayName: "",
-      description: "",
+      description: null,
       status: "Operational",
-      model: "",
-      manufacturer: "",
-      serialNumber: "",
-      department: "",
-      warrantyStatus: "Warranty",
-      warrantyExpirationDate: "",
+      model: null,
+      manufacturer: null,
+      category: "None",
+      serialNumber: null,
     });
     setEditingAsset(null);
   };
@@ -161,7 +152,7 @@ const AssetManagement = () => {
     setLoading(true);
     try {
       if (editingAsset) {
-        await API.put(`/asset-management/${editingAsset}`, formData);
+        await updateAsset(editingAsset, formData);
         setAssets((prevAssets) =>
           prevAssets.map((asset) =>
             asset.assetID === editingAsset ? { ...asset, ...formData } : asset
@@ -173,7 +164,7 @@ const AssetManagement = () => {
           type: "success",
         });
       } else {
-        const { data } = await API.post("/asset-management", formData);
+        const data = await createAsset(formData);
         setAssets((prevAssets) => [...prevAssets, data]);
         setSnackbar({
           open: true,
@@ -197,7 +188,7 @@ const AssetManagement = () => {
     if (!assetToDelete) return;
 
     try {
-      await API.delete(`/asset-management/${assetToDelete}`);
+      await deleteAsset(assetToDelete);
       setAssets((prevAssets) =>
         prevAssets.filter((asset) => asset.assetID !== assetToDelete)
       );
@@ -242,11 +233,22 @@ const AssetManagement = () => {
     setPage(0);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarMinimized((prev) => !prev);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
 
-      <Box sx={{ flexGrow: 1, ml: "250px", p: 3 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          ml: `${sidebarWidth}px`,
+          transition: "margin-left 0.3s ease",
+          p: 3,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -257,7 +259,7 @@ const AssetManagement = () => {
           <Typography variant="h4" gutterBottom>
             Asset Management
           </Typography>
-          {isInventoryManager && (
+ 
             <Button
               variant="contained"
               color="primary"
@@ -265,7 +267,7 @@ const AssetManagement = () => {
             >
               Create Asset
             </Button>
-          )}
+
         </Box>
 
         <AssetTable
@@ -280,7 +282,6 @@ const AssetManagement = () => {
           handleDeleteDialogOpen={handleDeleteDialogOpen}
           handleChangePage={handleChangePage}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
-          isInventoryManager={isInventoryManager}
         />
 
         <AssetDialog
@@ -305,11 +306,9 @@ const AssetManagement = () => {
             <Typography>Are you sure you want to delete this asset?</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleDeleteDialogClose} color="secondary">
-              No
-            </Button>
-            <Button onClick={handleDelete} color="error" variant="contained">
-              Yes
+            <Button onClick={handleDeleteDialogClose}>Cancel</Button>
+            <Button onClick={handleDelete} color="error">
+              Delete
             </Button>
           </DialogActions>
         </Dialog>
@@ -318,7 +317,6 @@ const AssetManagement = () => {
           open={snackbar.open}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             onClose={handleSnackbarClose}

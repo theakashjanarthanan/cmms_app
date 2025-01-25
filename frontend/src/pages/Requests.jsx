@@ -38,9 +38,11 @@ import {
   createWorkOrder,
   convertToWorkOrder,
 } from "../api/api";
-import Sidebar from "./Sidebar";
+
+import Sidebar from "../components/Sidebar";
 
 const Requests = () => {
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false); // Sidebar minimized state
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [requestData, setRequestData] = useState({
@@ -84,6 +86,8 @@ const Requests = () => {
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [assetDialogOpen, setAssetDialogOpen] = useState(false);
   const [assets, setAssets] = useState([]);
+
+  const sidebarWidth = isSidebarMinimized ? 70 : 250; // Sidebar width based on minimized state
 
   // Fetch requests from the backend
   useEffect(() => {
@@ -307,13 +311,25 @@ const Requests = () => {
     setAssetDialogOpen(false);
   };
 
+  // Toggle Sidebar minimized/maximized state
+  const toggleSidebar = () => {
+    setIsSidebarMinimized(!isSidebarMinimized);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
 
       {/* Main Content */}
-      <Box sx={{ flexGrow: 1, ml: "250px", p: 3 }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          ml: `${sidebarWidth}px`, // Dynamically adjust margin-left based on sidebar width
+          transition: "margin-left 0.3s ease", // Smooth transition for layout changes
+          p: 3,
+        }}
+      >
         <Typography variant="h4" gutterBottom>
           Welcome to the Requests Module
         </Typography>

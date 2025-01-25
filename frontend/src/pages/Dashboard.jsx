@@ -7,19 +7,22 @@ import {
   Avatar
 } from "@mui/material";
 
-import AuthContext from "../context/AuthContext";
+import AuthContext from "../context/AuthContext";              // Context
 
 import { useNavigate } from "react-router-dom";
 
-import Sidebar from "./Sidebar";                          // Import Sidebar component
-import styles from "../styles/dashboard.module.css";      // Import the CSS module
+import Sidebar from "../components/Sidebar";                   // Import Sidebar component
+import styles from "../styles/dashboard.module.css";           // Import the CSS module
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, auth, logout } = useContext(AuthContext); // Get user data and logout from context
+
+  // States
+  const { user, auth, logout } = useContext(AuthContext);              // Get user data and logout from context
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false); // Track sidebar state
 
   useEffect(() => {
+
     // If user is not authenticated, redirect to login page
     if (!auth) {
       navigate("/login");
@@ -39,7 +42,7 @@ const Dashboard = () => {
 
   return (
     <Box className={styles.dashboardContainer}>
-      {/* Sidebar with user role passed */}
+      
       <Sidebar
         onLogout={handleLogout}
         userRole={user?.role}

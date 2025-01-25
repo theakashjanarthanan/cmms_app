@@ -4,18 +4,14 @@ const mongoose = require('mongoose');
 
 const assetSchema = new mongoose.Schema(
   {
-    assetID: { type: String, unique: true, required: true },
-    name: { type: String, required: true },
-    displayName: { type: String, required: true },
-    description: { type: String, required: true },
+    assetID: { type: String, unique: true },
+    name: { type: String, required: true }, 
+    description: { type: String },
     status: { type: String, enum: ['Operational', 'Out of Service'], default: 'Operational' },
-    model: { type: String, required: true },
+    model: { type: String },
     manufacturer: { type: String },
+    category: { type: String, enum: ['None', 'Damage', 'Electrical', 'Inspection', 'Meter', 'Preventative', 'Project', 'Safety'], default: 'None' },
     serialNumber: { type: String },
-    department: { type: String },
-    warrantyStatus: { type: String, enum: ['Warranty', 'Out of Warranty'], default: 'Warranty' },
-    warrantyExpirationDate: { type: Date },
-    deletedAt: { type: Date }, // New field for deletedAt
   },
   { timestamps: true }
 );

@@ -43,7 +43,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 import AuthContext from "../context/AuthContext";
 
 const WorkOrdersManagementPage = () => {
@@ -51,7 +51,7 @@ const WorkOrdersManagementPage = () => {
 
   // Check if user role is Admin or Manager
   const isAdminOrManager = user?.role === "Admin" || user?.role === "Manager";
-
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [workOrders, setWorkOrders] = useState([]);
   const [technicians, setTechnicians] = useState([]);
   const [selectedWorker, setSelectedWorker] = useState(null);
@@ -68,7 +68,8 @@ const WorkOrdersManagementPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [deleteConfirmationDialog, setDeleteConfirmationDialog] = useState(false);
+  const [deleteConfirmationDialog, setDeleteConfirmationDialog] =
+    useState(false);
   const [orderIdToDelete, setOrderIdToDelete] = useState(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -78,6 +79,8 @@ const WorkOrdersManagementPage = () => {
   const [teamDialogOpen, setTeamDialogOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   // const [orderStatus] = useState(selectedWorkOrder?.status || "");
+
+  const sidebarWidth = isSidebarMinimized ? 70 : 260;
 
   const [newWorkOrder, setNewWorkOrder] = useState({
     title: "",
@@ -380,25 +383,42 @@ const WorkOrdersManagementPage = () => {
     setTeamDialogOpen(false); // Close the dialog after selection
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarMinimized((prev) => !prev);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
 
-      <Box sx={{ flexGrow: 1, ml: "250px", p: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Work Orders Management
-        </Typography>
-
-        {isAdminOrManager && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setOpenDialog(true)}
-            sx={{ mb: 2 }}
-          >
-            Create Work Order
-          </Button>
-        )}
+      <Box
+        sx={{
+          flexGrow: 1,
+          ml: `${sidebarWidth}px`, // Dynamically adjust margin-left based on sidebar width
+          transition: "margin-left 0.3s ease", // Smooth transition for layout changes
+          p: 3,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Work Orders Management
+          </Typography>
+          {isAdminOrManager && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setOpenDialog(true)}
+            >
+              Create Work Order
+            </Button>
+          )}
+        </Box>
 
         {/* Dialog Box for Creating Work Order */}
         <Dialog

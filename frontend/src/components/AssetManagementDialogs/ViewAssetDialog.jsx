@@ -35,21 +35,9 @@ const ViewAssetDialog = ({ viewDialog, handleViewDialogClose, formData }) => {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Asset ID:
-            </Typography>
-            <Typography variant="body1">{formData.assetID}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Asset Name:
             </Typography>
             <Typography variant="body1">{formData.name}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Display Name:
-            </Typography>
-            <Typography variant="body1">{formData.displayName}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -77,41 +65,11 @@ const ViewAssetDialog = ({ viewDialog, handleViewDialogClose, formData }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Department:
+            Manufacturer:
             </Typography>
-            <Typography variant="body1">{formData.department}</Typography>
+            <Typography variant="body1">{formData.manufacturer}</Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Warranty Status:
-            </Typography>
-            <Typography variant="body1">{formData.warrantyStatus}</Typography>
-          </Grid>
-
-          {/* Warranty Expiration Date in 12-hour format */}
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Warranty Expiration:
-            </Typography>
-            <Typography variant="body1">
-              {formData.warrantyExpirationDate
-                ? new Date(formData.warrantyExpirationDate).toLocaleString(
-                    "en-US",
-                    {
-                      hour: "numeric",
-                      minute: "numeric",
-                      second: "numeric",
-                      hour12: true,
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    },
-                  )
-                : "N/A"}
-            </Typography>
-          </Grid>
-
-          {/* Created At and Updated At */}
+         {/* Created At and Updated At */}
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               Created At:

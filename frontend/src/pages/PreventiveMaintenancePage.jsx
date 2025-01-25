@@ -27,7 +27,9 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import Sidebar from "./Sidebar";
+
+import Sidebar from "../components/Sidebar";
+
 import {
   createPM,
   fetchAssets,
@@ -37,14 +39,15 @@ import {
   fetchPMById,
   updatePM,
   deletePM,
-} from "../api/api";  
+} from "../api/api";
 
-import PreventiveMaintenanceTable from './PreventiveMaintenanceDialogs/PreventiveMaintenanceTable';                 // Table Component
-import PreventiveMaintenanceViewDialog from './PreventiveMaintenanceDialogs/PreventiveMaintenanceViewDialog';       // View Dialog Component
-import PreventiveMaintenanceEditDialog from './PreventiveMaintenanceDialogs/PreventiveMaintenanceEditDialog';       // Create Dialog Component
-import PreventiveMaintenanceDeleteDialog from './PreventiveMaintenanceDialogs/PreventiveMaintenanceDeleteDialog';   // Delete Dialog Component
+import PreventiveMaintenanceTable from "../components/PreventiveMaintenanceDialogs/PreventiveMaintenanceTable"; // Table Component
+import PreventiveMaintenanceViewDialog from "../components/PreventiveMaintenanceDialogs/PreventiveMaintenanceViewDialog"; // View Dialog Component
+import PreventiveMaintenanceEditDialog from "../components/PreventiveMaintenanceDialogs/PreventiveMaintenanceEditDialog"; // Create Dialog Component
+import PreventiveMaintenanceDeleteDialog from "../components/PreventiveMaintenanceDialogs/PreventiveMaintenanceDeleteDialog"; // Delete Dialog Component
 
 const PreventiveMaintenancePage = () => {
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [assetDialogOpen, setAssetDialogOpen] = useState(false);
@@ -115,6 +118,8 @@ const PreventiveMaintenancePage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const sidebarWidth = isSidebarMinimized ? 70 : 260;
 
   // Fetch all necessary data (PMs, assets, teams, technicians) when the component mounts
   useEffect(() => {
@@ -403,20 +408,40 @@ const PreventiveMaintenancePage = () => {
     );
   }
 
+  const toggleSidebar = () => {
+    setIsSidebarMinimized((prev) => !prev);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
-      <Box sx={{ flexGrow: 1, ml: "250px", p: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to the Preventive Maintenance Page
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenDialog(true)}
+      <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
+
+      <Box
+        sx={{
+          flexGrow: 1,
+          ml: `${sidebarWidth}px`, // Dynamically adjust margin-left based on sidebar width
+          transition: "margin-left 0.3s ease", // Smooth transition for layout changes
+          p: 3,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          Create PM
-        </Button>
+          <Typography variant="h4" gutterBottom>
+            Welcome to the Preventive Maintenance Page
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenDialog(true)}
+          >
+            Create PM
+          </Button>
+        </Box>
 
         {/* Create PM Dialog Box */}
         <Dialog open={openDialog} onClose={handleDialogClose}>
@@ -783,51 +808,49 @@ const PreventiveMaintenancePage = () => {
           </DialogActions>
         </Dialog>
 
-        
         <Box sx={{ width: "100%", marginTop: 4 }}>
-          
           {/* Table Displaying Preventive Maintenance Records */}
           <>
-          <PreventiveMaintenanceTable
-            sortedPMs={sortedPMs}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            handleChangePage={handleChangePage}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
-            handleViewClick={handleViewClick}
-            handleEditClick={handleEditClick}
-            handleDeleteClick={handleDeleteClick}
-            pms={pms}
-          />
+            <PreventiveMaintenanceTable
+              sortedPMs={sortedPMs}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+              handleViewClick={handleViewClick}
+              handleEditClick={handleEditClick}
+              handleDeleteClick={handleDeleteClick}
+              pms={pms}
+            />
           </>
-          
+
           {/* View PM Dialog */}
           <>
-          <PreventiveMaintenanceViewDialog
-            open={openViewDialog}
-            handleClose={handleCloseViewDialog}
-            pmDetails={pmDetails}
-          />
+            <PreventiveMaintenanceViewDialog
+              open={openViewDialog}
+              handleClose={handleCloseViewDialog}
+              pmDetails={pmDetails}
+            />
           </>
 
           {/* Edit Dialog */}
           <>
-          <PreventiveMaintenanceEditDialog
-            open={openEditDialog}
-            handleCloseDialog={handleCloseDialog}
-            formData={formData}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
+            <PreventiveMaintenanceEditDialog
+              open={openEditDialog}
+              handleCloseDialog={handleCloseDialog}
+              formData={formData}
+              handleChange={handleChange}
+              handleSubmit={handleSubmit}
+            />
           </>
 
           {/* Delete Confirmation Dialog */}
           <>
-          <PreventiveMaintenanceDeleteDialog
-            open={openDeleteDialog}
-            handleDeleteCancel={handleDeleteCancel}
-            handleDeleteConfirm={handleDeleteConfirm}
-          />
+            <PreventiveMaintenanceDeleteDialog
+              open={openDeleteDialog}
+              handleDeleteCancel={handleDeleteCancel}
+              handleDeleteConfirm={handleDeleteConfirm}
+            />
           </>
 
           {/* Snackbar for notifications */}
