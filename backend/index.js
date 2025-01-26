@@ -29,7 +29,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/asset-management', assetRoutes);
+app.use('/api/assets', assetRoutes);
 app.use('/api/peoples', peoplesRoutes);
 app.use('/api/technician-portal', technicianRoutes);
 app.use('/api/work-orders', workOrderRoutes);

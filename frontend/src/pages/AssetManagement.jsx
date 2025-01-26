@@ -11,26 +11,22 @@ import {
   Alert,
 } from "@mui/material";
 
+import Sidebar from "../components/Sidebar";
+import AssetDialog from "../components/AssetManagementDialogs/AssetDialog";
+import ViewAssetDialog from "../components/AssetManagementDialogs/ViewAssetDialog";
+import AssetTable from "../components/AssetManagementDialogs/AssetTable";
 
-import Sidebar from "../components/Sidebar"; // Sidebar
-import AssetDialog from "../components/AssetManagementDialogs/AssetDialog"; // Asset Creation and Updation Dialog
-import ViewAssetDialog from "../components/AssetManagementDialogs/ViewAssetDialog"; // View Dialog
-import AssetTable from "../components/AssetManagementDialogs/AssetTable"; // Asset Table
-
-// Import API calls
 import {
   fetchAssets,
   createAsset,
   updateAsset,
   deleteAsset,
+  fetchSingleAsset, 
 } from "../api/assetapi";
 
 const AssetManagement = () => {
- 
-  // States
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [formData, setFormData] = useState({
-    assetID: "",
     name: "",
     description: null,
     status: "Operational",
@@ -39,7 +35,6 @@ const AssetManagement = () => {
     category: "None",
     serialNumber: null,
   });
-
   const [openDialog, setOpenDialog] = useState(false);
   const [viewDialog, setViewDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -52,15 +47,9 @@ const AssetManagement = () => {
   });
   const [assets, setAssets] = useState([]);
   const [editingAsset, setEditingAsset] = useState(null);
-  const [sortConfig, setSortConfig] = useState({
-    key: "assetID",
-    direction: "desc",
-  });
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const sidebarWidth = isSidebarMinimized ? 70 : 260;
 
-  // Fetch assets and check user role
   useEffect(() => {
     const loadAssets = async () => {
       try {
@@ -79,11 +68,10 @@ const AssetManagement = () => {
     loadAssets();
   }, []);
 
-  // Handlers for dialogs
   const handleDialogOpen = (asset = null) => {
     if (asset) {
       setFormData(asset);
-      setEditingAsset(asset.assetID);
+      setEditingAsset(asset._id);
     } else {
       resetForm();
     }
@@ -95,17 +83,28 @@ const AssetManagement = () => {
     setOpenDialog(false);
   };
 
-  const handleViewDialogOpen = (asset) => {
-    setFormData(asset);
-    setViewDialog(true);
+  const handleViewDialogOpen = async (asset) => {
+    try {
+      // Fetch the asset details from the backend using its ID
+      const fetchedAsset = await fetchSingleAsset(asset._id); // Pass the _id of the Selected Asset
+      setFormData(fetchedAsset); // Set the form data to the fetched asset details
+      setViewDialog(true); // Open the dialog to view the asset details
+    } catch (error) {
+      console.error("Error fetching asset details:", error);
+      setSnackbar({
+        open: true,
+        message: "Error fetching asset details.",
+        type: "error",
+      });
+    }
   };
 
   const handleViewDialogClose = () => {
     setViewDialog(false);
   };
 
-  const handleDeleteDialogOpen = (assetID) => {
-    setAssetToDelete(assetID);
+  const handleDeleteDialogOpen = (assetId) => {
+    setAssetToDelete(assetId);
     setDeleteDialog(true);
   };
 
@@ -114,10 +113,8 @@ const AssetManagement = () => {
     setDeleteDialog(false);
   };
 
-  // Form and snackbar handlers
   const resetForm = () => {
     setFormData({
-      assetID: "",
       name: "",
       description: null,
       status: "Operational",
@@ -137,17 +134,8 @@ const AssetManagement = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // CRUD operations
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.assetID) {
-      setSnackbar({
-        open: true,
-        message: "Asset ID is required!",
-        type: "error",
-      });
-      return;
-    }
 
     setLoading(true);
     try {
@@ -155,7 +143,7 @@ const AssetManagement = () => {
         await updateAsset(editingAsset, formData);
         setAssets((prevAssets) =>
           prevAssets.map((asset) =>
-            asset.assetID === editingAsset ? { ...asset, ...formData } : asset
+            asset._id === editingAsset ? { ...asset, ...formData } : asset
           )
         );
         setSnackbar({
@@ -190,7 +178,7 @@ const AssetManagement = () => {
     try {
       await deleteAsset(assetToDelete);
       setAssets((prevAssets) =>
-        prevAssets.filter((asset) => asset.assetID !== assetToDelete)
+        prevAssets.filter((asset) => asset._id !== assetToDelete)
       );
       setSnackbar({
         open: true,
@@ -206,31 +194,6 @@ const AssetManagement = () => {
         type: "error",
       });
     }
-  };
-
-  // Sorting and pagination
-  const handleSort = (key) => {
-    const isAsc = sortConfig.key === key && sortConfig.direction === "asc";
-    setSortConfig({ key, direction: isAsc ? "desc" : "asc" });
-  };
-
-  const sortedAssets = [...assets].sort((a, b) => {
-    if (a[sortConfig.key] < b[sortConfig.key])
-      return sortConfig.direction === "asc" ? -1 : 1;
-    if (a[sortConfig.key] > b[sortConfig.key])
-      return sortConfig.direction === "asc" ? 1 : -1;
-    return 0;
-  });
-
-  const paginatedAssets = sortedAssets.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
-  const handleChangePage = (event, newPage) => setPage(newPage);
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const toggleSidebar = () => {
@@ -259,29 +222,21 @@ const AssetManagement = () => {
           <Typography variant="h4" gutterBottom>
             Asset Management
           </Typography>
- 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleDialogOpen()}
-            >
-              Create Asset
-            </Button>
 
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleDialogOpen()}
+          >
+            Create Asset
+          </Button>
         </Box>
 
         <AssetTable
           assets={assets}
-          paginatedAssets={paginatedAssets}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          sortConfig={sortConfig}
-          handleSort={handleSort}
-          handleViewDialogOpen={handleViewDialogOpen}
-          handleDialogOpen={handleDialogOpen}
-          handleDeleteDialogOpen={handleDeleteDialogOpen}
-          handleChangePage={handleChangePage}
-          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          onView={handleViewDialogOpen} // Pass the function to handle asset view
+          onEdit={handleDialogOpen}
+          onDelete={handleDeleteDialogOpen}
         />
 
         <AssetDialog
@@ -297,7 +252,7 @@ const AssetManagement = () => {
         <ViewAssetDialog
           viewDialog={viewDialog}
           handleViewDialogClose={handleViewDialogClose}
-          formData={formData}
+          formData={formData} // Pass the fetched data to ViewAssetDialog
         />
 
         <Dialog open={deleteDialog} onClose={handleDeleteDialogClose}>
@@ -317,6 +272,10 @@ const AssetManagement = () => {
           open={snackbar.open}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
         >
           <Alert
             onClose={handleSnackbarClose}

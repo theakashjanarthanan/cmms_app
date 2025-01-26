@@ -1,19 +1,22 @@
 // backend\routes\assetRoutes.js
 
 const express = require('express');
-const { getAllAssets, createAsset , updateAsset , deleteAsset} = require('../controllers/assetController');
+const { createAsset, getAllAssets, getSingleAsset, updateAsset , deleteAsset} = require('../controllers/assetController');
 const router = express.Router();
 
-// POST: /api/asset-management
+// POST: /api/asset-management - Route to create a new asset
 router.post('/', createAsset);
 
-// GET: Fetch all assets
+// GET:/api/asset-management  - Fetch all assets  
 router.get('/', getAllAssets);
 
-// PUT: /api/asset-management/:assetID - Update an existing asset
-router.put('/:assetID', updateAsset);
+// GET: Fetch a single asset by ID
+router.get('/:id', getSingleAsset);  
 
-// DELETE: /api/asset-management/:assetID - Delete an asset
-router.delete('/:assetID', deleteAsset);
+// PUT: /api/asset-management/:id - Update an existing asset
+router.put('/:id', updateAsset); 
+
+// DELETE: /api/asset-management/:id - Delete an asset
+router.delete('/:id', deleteAsset);
 
 module.exports = router;

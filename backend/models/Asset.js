@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const assetSchema = new mongoose.Schema(
   {
-    assetID: { type: String, unique: true },
+    // assetID: { type: String, unique: true },
     name: { type: String, required: true }, 
     description: { type: String },
     status: { type: String, enum: ['Operational', 'Out of Service'], default: 'Operational' },

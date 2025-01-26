@@ -1,4 +1,4 @@
-// frontend\src\components\Dashboard.jsx
+// frontend\src\pages\Dashboard.jsx
 
 import React, { useContext, useEffect, useState } from "react";
 import { 

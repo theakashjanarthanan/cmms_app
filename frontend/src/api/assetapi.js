@@ -5,7 +5,7 @@ import API from '../api/api';
 // Create Asset
 export const createAsset = async (assetData) => {
   try {
-    const response = await API.post('/asset-management', assetData);
+    const response = await API.post('/assets', assetData);
     return response.data;
   } catch (error) {
     console.error('Error creating asset:', error);
@@ -16,7 +16,7 @@ export const createAsset = async (assetData) => {
 // Fetch Assets
 export const fetchAssets = async () => {
   try {
-    const response = await API.get('/asset-management');
+    const response = await API.get('/assets');
     return response.data;
   } catch (error) {
     console.error('Error fetching assets:', error);
@@ -24,10 +24,21 @@ export const fetchAssets = async () => {
   }
 };
 
-// Update Asset
-export const updateAsset = async (assetId, updatedData) => {
+// Fetch Single Asset
+export const fetchSingleAsset = async (id) => {
   try {
-    const response = await API.put(`/asset-management/${assetId}`, updatedData);
+    const response = await API.get(`/assets/${id}`); // Fetch the asset by its ID
+    return response.data; // Return the asset data
+  } catch (error) {
+    console.error('Error fetching asset:', error);
+    throw error;
+  }
+};
+
+// Update Asset
+export const updateAsset = async (id, updatedData) => {
+  try {
+    const response = await API.put(`/assets/${id}`, updatedData);
     return response.data;
   } catch (error) {
     console.error('Error updating asset:', error);
@@ -36,9 +47,9 @@ export const updateAsset = async (assetId, updatedData) => {
 };
 
 // Delete Asset
-export const deleteAsset = async (assetId) => {
+export const deleteAsset = async (id) => {
   try {
-    const response = await API.delete(`/asset-management/${assetId}`);
+    const response = await API.delete(`/assets/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting asset:', error);
