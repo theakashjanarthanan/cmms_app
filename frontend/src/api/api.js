@@ -16,7 +16,7 @@ API.interceptors.request.use((req) => {
 // Asset Management API Endpoints
 export const createAsset = async (assetData) => {
   try {
-    const response = await API.post('/asset-management', assetData);
+    const response = await API.post('/assets', assetData);
     return response.data;
   } catch (error) {
     console.error('Error creating asset:', error);
@@ -135,7 +135,7 @@ export const updateApprovalStatus = async (orderId, approvalStatus) => {
 // Fetch Assets for Work Orders
 export const fetchAssets = async () => {
   try {
-    const response = await API.get('/asset-management');
+    const response = await API.get('/assets');
     return response.data;
   } catch (error) {
     console.error('Error fetching assets:', error);
