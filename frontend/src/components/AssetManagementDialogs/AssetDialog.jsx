@@ -1,6 +1,6 @@
-import React from "react"; // Importing React to define the component
+import React from "react"; 
 import {
-  Dialog,
+  Drawer,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -20,14 +20,26 @@ const AssetDialog = ({
   handleChange,  
 }) => {
   return (
-    <Dialog open={open} onClose={onClose}> {/* The dialog component is shown if 'open' is true */}
-      <DialogTitle>{editingAsset ? "Edit Asset" : "Create Asset"}</DialogTitle> {/* Title based on whether editing or creating an asset */}
+    <Drawer
+      anchor="right" // Drawer will slide in from the right
+      open={open}
+      onClose={onClose}
+      sx={{
+        width: 500, // Adjust width as needed
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: 500, // Set the width of the drawer
+          padding: 3,  // Add padding inside the drawer
+        },
+      }}
+    >
+      <DialogTitle>{editingAsset ? "Edit Asset" : "Create Asset"}</DialogTitle>
       <DialogContent>
         <form onSubmit={onSubmit}> {/* Form submission handler */}
           <Grid container spacing={3}> {/* Grid layout for the form */}
+            {/* Stack all fields vertically by ensuring each Grid item takes full width */}
             
-            {/* Left Side of the Form (3 inputs) */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 name="name"
                 label="Asset Name"
@@ -37,6 +49,9 @@ const AssetDialog = ({
                 fullWidth
                 margin="normal"
               />
+            </Grid>
+
+            <Grid item xs={12}>
               <TextField
                 name="description"
                 label="Description"
@@ -44,9 +59,12 @@ const AssetDialog = ({
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
-                multiline // Allows multiple lines for the description
-                rows={3} // Sets the number of rows visible
+                multiline
+                rows={3}
               />
+            </Grid>
+
+            <Grid item xs={12}>
               <TextField
                 name="model"
                 label="Model"
@@ -57,55 +75,42 @@ const AssetDialog = ({
               />
             </Grid>
 
-            {/* Right Side of the Form (4 inputs) */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 name="status"
-                select // Dropdown menu for selection
+                select
                 label="Status"
                 value={formData.status}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
               >
-                {/* Placeholder option */}
-                <MenuItem value="" disabled>
-                  Select Operational Status
-                </MenuItem>
+                <MenuItem value="" disabled>Select Operational Status</MenuItem>
                 <MenuItem value="Operational">Operational</MenuItem>
                 <MenuItem value="Out of Service">Out of Service</MenuItem>
               </TextField>
+            </Grid>
 
+            <Grid item xs={12}>
               <TextField
                 name="category"
-                select // Dropdown menu for category selection
+                select
                 label="Category"
-                value={formData?.category || ""} // Handles default value if category is not set
+                value={formData?.category || ""}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
               >
-                {/* Placeholder option */}
-                <MenuItem value="" disabled>
-                  Select Category
-                </MenuItem>
-                {/* List of category options */}
-                {[
-                  "None",
-                  "Damage",
-                  "Electrical",
-                  "Inspection",
-                  "Meter",
-                  "Preventative",
-                  "Project",
-                  "Safety",
-                ].map((option) => (
+                <MenuItem value="" disabled>Select Category</MenuItem>
+                {["None", "Damage", "Electrical", "Inspection", "Meter", "Preventative", "Project", "Safety"].map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>
                 ))}
               </TextField>
+            </Grid>
 
+            <Grid item xs={12}>
               <TextField
                 name="serialNumber"
                 label="Serial Number"
@@ -114,7 +119,9 @@ const AssetDialog = ({
                 fullWidth
                 margin="normal"
               />
+            </Grid>
 
+            <Grid item xs={12}>
               <TextField
                 name="manufacturer"
                 label="Manufacturer"
@@ -129,21 +136,18 @@ const AssetDialog = ({
       </DialogContent>
 
       <DialogActions>
-        {/* Buttons to close the dialog or submit the form */}
-        <Button onClick={onClose} color="secondary">
-          Close
-        </Button>
+        <Button onClick={onClose} color="secondary">Close</Button>
         <Button
-          onClick={onSubmit} // Trigger the onSubmit callback
+          onClick={onSubmit}
           color="primary"
           variant="contained"
-          disabled={loading} // Disable the submit button while loading
+          disabled={loading}
         >
-          {loading ? "Saving..." : editingAsset ? "Update" : "Create"} {/* Change button text based on loading or editing state */}
+          {loading ? "Saving..." : editingAsset ? "Update" : "Create"}
         </Button>
       </DialogActions>
-    </Dialog>
+    </Drawer>
   );
 };
 
-export default AssetDialog; 
+export default AssetDialog;

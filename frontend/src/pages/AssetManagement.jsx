@@ -2,26 +2,29 @@ import React, { useState, useEffect } from "react";
 import {
   Button,
   Box,
-  Typography,
+  Snackbar,
+  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Snackbar,
-  Alert,
+  Typography
 } from "@mui/material";
 
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header/header";
 import AssetDialog from "../components/AssetManagementDialogs/AssetDialog";
-import ViewAssetDialog from "../components/AssetManagementDialogs/ViewAssetDialog";
-import AssetTable from "../components/AssetManagementDialogs/AssetTable";
+import AssetTable from "../components/AssetManagementDialogs/AssetTable";  
+import ViewAssetDialog from "../components/AssetManagementDialogs/ViewAssetDialog"
+import AssetOptions from "../components/AssetManagementDialogs/AssetOptions"; 
+import AssetFilters from "../components/AssetManagementDialogs/AssetFilters";
 
 import {
   fetchAssets,
   createAsset,
   updateAsset,
   deleteAsset,
-  fetchSingleAsset, 
+  fetchSingleAsset,
 } from "../api/assetapi";
 
 const AssetManagement = () => {
@@ -45,16 +48,33 @@ const AssetManagement = () => {
     message: "",
     type: "",
   });
+
   const [assets, setAssets] = useState([]);
   const [editingAsset, setEditingAsset] = useState(null);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
 
-  const sidebarWidth = isSidebarMinimized ? 70 : 260;
+  const [selectedColumns, setSelectedColumns] = useState([
+    "name",
+    "description",
+    "status",
+    "model",
+    "manufacturer",
+    "category",
+    "serialNumber",
+  ]);
+
+  const sidebarWidth = isSidebarMinimized ? 5 : 260;
 
   useEffect(() => {
     const loadAssets = async () => {
       try {
         const data = await fetchAssets();
         setAssets(data);
+        setFilteredOrders(data);
+        console.log("Assets Fetched Successfully");
       } catch (error) {
         console.error("Error fetching assets:", error);
         setSnackbar({
@@ -67,6 +87,22 @@ const AssetManagement = () => {
 
     loadAssets();
   }, []);
+
+  useEffect(() => {
+    let filtered = assets;
+
+    if (selectedStatus) {
+      filtered = filtered.filter((asset) => asset.status === selectedStatus);
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter((asset) =>
+        asset.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredOrders(filtered);
+  }, [selectedStatus, searchTerm, assets]);
 
   const handleDialogOpen = (asset = null) => {
     if (asset) {
@@ -83,22 +119,6 @@ const AssetManagement = () => {
     setOpenDialog(false);
   };
 
-  const handleViewDialogOpen = async (asset) => {
-    try {
-      // Fetch the asset details from the backend using its ID
-      const fetchedAsset = await fetchSingleAsset(asset._id); // Pass the _id of the Selected Asset
-      setFormData(fetchedAsset); // Set the form data to the fetched asset details
-      setViewDialog(true); // Open the dialog to view the asset details
-    } catch (error) {
-      console.error("Error fetching asset details:", error);
-      setSnackbar({
-        open: true,
-        message: "Error fetching asset details.",
-        type: "error",
-      });
-    }
-  };
-
   const handleViewDialogClose = () => {
     setViewDialog(false);
   };
@@ -108,10 +128,6 @@ const AssetManagement = () => {
     setDeleteDialog(true);
   };
 
-  const handleDeleteDialogClose = () => {
-    setAssetToDelete(null);
-    setDeleteDialog(false);
-  };
 
   const resetForm = () => {
     setFormData({
@@ -136,7 +152,6 @@ const AssetManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
     try {
       if (editingAsset) {
@@ -172,6 +187,21 @@ const AssetManagement = () => {
     }
   };
 
+    const handleViewDialogOpen = async (asset) => {
+      try {
+        const fetchedAsset = await fetchSingleAsset(asset._id);
+        setFormData(fetchedAsset);
+        setViewDialog(true);
+      } catch (error) {
+        console.error("Error fetching asset details:", error);
+        setSnackbar({
+          open: true,
+          message: "Error fetching asset details.",
+          type: "error",
+        });
+      }
+    };
+
   const handleDelete = async () => {
     if (!assetToDelete) return;
 
@@ -196,14 +226,36 @@ const AssetManagement = () => {
     }
   };
 
+  const handleDeleteDialogClose = () => {
+    setAssetToDelete(null);
+    setDeleteDialog(false);
+  };
+
   const toggleSidebar = () => {
     setIsSidebarMinimized((prev) => !prev);
+  };
+
+  const handleColumnClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleColumnSelect = (column) => {
+    setSelectedColumns((prev) => {
+      if (prev.includes(column)) {
+        return prev.filter((col) => col !== column);
+      } else {
+        return [...prev, column];
+      }
+    });
+  };
+
+  const handleColumnClose = () => {
+    setAnchorEl(null);
   };
 
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
-
       <Box
         sx={{
           flexGrow: 1,
@@ -211,51 +263,65 @@ const AssetManagement = () => {
           transition: "margin-left 0.3s ease",
           p: 3,
         }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Asset Management
-          </Typography>
+      > 
+        {/* Header Component */}
+        <Header
+          title="Assets"
+          toggleDrawer={toggleSidebar}
+          buttonText="Create Asset"
+          buttonAction={() => handleDialogOpen()}
+        />
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleDialogOpen()}
-          >
-            Create Asset
-          </Button>
-        </Box>
-
-        <AssetTable
+        {/* AssetFilter component */}
+        <AssetOptions
+          filteredOrders={filteredOrders}
           assets={assets}
-          onView={handleViewDialogOpen} // Pass the function to handle asset view
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          handleColumnClick={handleColumnClick}
+          handleColumnClose={handleColumnClose}
+          anchorEl={anchorEl}
+          handleColumnSelect={handleColumnSelect}
+          selectedColumns={selectedColumns}
+        />
+
+         {/* AssetFilter component */}
+         <AssetFilters
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}  
+        />
+
+        {/* Asset Table Component */}
+        <AssetTable
+          assets={filteredOrders}
+          selectedColumns={selectedColumns}
+          onView={handleViewDialogOpen}
+        />
+
+        {/* View Asset Dialog Component */}
+        <ViewAssetDialog
+          viewDialog={viewDialog}
+          handleViewDialogClose={handleViewDialogClose}
+          formData={formData}
           onEdit={handleDialogOpen}
           onDelete={handleDeleteDialogOpen}
         />
 
+        {/* Asset Creation / Updation Component */}
         <AssetDialog
           open={openDialog}
           onClose={handleDialogClose}
           onSubmit={handleSubmit}
-          loading={loading}
           editingAsset={editingAsset}
+          loading={loading}
           formData={formData}
           handleChange={handleChange}
         />
 
-        <ViewAssetDialog
-          viewDialog={viewDialog}
-          handleViewDialogClose={handleViewDialogClose}
-          formData={formData} // Pass the fetched data to ViewAssetDialog
-        />
-
-        <Dialog open={deleteDialog} onClose={handleDeleteDialogClose}>
+      </Box>
+      
+      {/* Delete Dialog */}
+      <Dialog open={deleteDialog} onClose={handleDeleteDialogClose}>
           <DialogTitle>Delete Asset</DialogTitle>
           <DialogContent>
             <Typography>Are you sure you want to delete this asset?</Typography>
@@ -268,24 +334,24 @@ const AssetManagement = () => {
           </DialogActions>
         </Dialog>
 
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <Alert
           onClose={handleSnackbarClose}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
+          severity={snackbar.type}
+          sx={{ width: "100%" }}
         >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbar.type}
-            sx={{ width: "100%" }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </Box>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

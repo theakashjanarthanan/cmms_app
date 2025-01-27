@@ -30,11 +30,11 @@ const getAllAssets = async (req, res) => {
 // Fetch a single asset by ID
 const getSingleAsset = async (req, res) => {
   try {
-    const asset = await Asset.findById(req.params.id);  // Find the asset by ID
+    const asset = await Asset.findById(req.params.id); 
     if (!asset) {
       return res.status(404).json({ message: 'Asset not found' });
     }
-    res.status(200).json(asset);  // Send the asset data back as a response
+    res.status(200).json(asset);  
   } catch (error) {
     res.status(500).json({ message: 'Server error while fetching asset' });
   }
@@ -43,7 +43,7 @@ const getSingleAsset = async (req, res) => {
 // Update an existing asset
 const updateAsset = async (req, res) => {
   try {
-    const { id } = req.params; // Retrieve MongoDB Object ID
+    const { id } = req.params; 
     const updatedAssetData = req.body;
 
     const updatedAsset = await Asset.findByIdAndUpdate(id, updatedAssetData, { new: true });
@@ -61,7 +61,7 @@ const updateAsset = async (req, res) => {
 
 // Delete an asset  
 const deleteAsset = async (req, res) => {
-  const { id } = req.params;  // Use params to get the _id from the URL
+  const { id } = req.params;  
 
   // Check if id is a valid ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -69,7 +69,7 @@ const deleteAsset = async (req, res) => {
   }
 
   try {
-    const asset = await Asset.findByIdAndDelete(id);  // Delete using the MongoDB _id
+    const asset = await Asset.findByIdAndDelete(id);  
     if (!asset) {
       return res.status(404).json({ message: "Asset not found." });
     }

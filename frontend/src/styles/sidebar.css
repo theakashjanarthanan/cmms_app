@@ -1,5 +1,3 @@
-/* frontend\src\styles\sidebar.css */
-
 /* General styles */
 * {
     box-sizing: border-box;
@@ -19,7 +17,7 @@ html, body, input, textarea, select, button {
     height: 100%;
     background: rgb(50, 50, 51);
     z-index: 21;
-    transition: transform 300ms, width 300ms;
+    transition: transform 300ms ease, width 300ms ease; /* Added easing for smooth animation */
     transform: translateX(0);
     display: flex;
     flex-direction: column;
@@ -28,7 +26,8 @@ html, body, input, textarea, select, button {
 }
 
 .sidebar-container.minimized {
-    width: 70px;
+    width: 70px; /* Minimized width */
+    transform: translateX(-190px); /* Adjust sidebar position when minimized */
 }
 
 /* Header styles */
@@ -38,9 +37,9 @@ html, body, input, textarea, select, button {
     text-align: center;
     color: #ffffff;
     margin-bottom: 24px;
-    padding: 16px;
+    padding: 25px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
     position: relative;
@@ -55,7 +54,6 @@ html, body, input, textarea, select, button {
     font-size: 18px;
     transition: transform 0.3s;
     margin-left: 10px;
-
 }
 
 .minimize-button:hover {

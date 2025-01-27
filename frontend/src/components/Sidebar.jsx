@@ -12,7 +12,7 @@ import GroupIcon from '@mui/icons-material/Group';              // Icon for Peop
 import RequestPageIcon from '@mui/icons-material/RequestPage';  // Icon for Requests Page
 import InventoryIcon from '@mui/icons-material/Inventory';      // Icon for Inventory Page
 import LogoutIcon from '@mui/icons-material/Logout';            // Icon for Logout Button
-import MenuIcon from '@mui/icons-material/Menu';                // Icon for Minimize/Maximize Toggle
+// import MenuIcon from '@mui/icons-material/Menu';                // Icon for Minimize/Maximize Toggle
 
 import { Link } from 'react-router-dom';   
 
@@ -23,9 +23,9 @@ const Sidebar = ({ onLogout, userRole, isMinimized, toggleSidebar }) => {
         <Box className={`sidebar-container ${isMinimized ? 'minimized' : ''}`}>
             {/* Sidebar Header */}
             <div className="sidebar-header">
-                <span>{!isMinimized && 'Menu'}</span>
+                <span>{!isMinimized && 'Upkeep'}</span>
                 <button className="minimize-button" onClick={toggleSidebar}>
-                    <MenuIcon />
+                    {/* <MenuIcon /> */}
                 </button>
             </div>
 
