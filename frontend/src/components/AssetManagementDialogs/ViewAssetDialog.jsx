@@ -14,6 +14,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // Importing ArrowBac
 import MoreVertIcon from "@mui/icons-material/MoreVert"; // Importing MoreVert Icon (three-dot menu)
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Divider from "@mui/material/Divider";
 
 const ViewAssetDialog = ({
   viewDialog, // State variable to control dialog visibility
@@ -44,15 +45,19 @@ const ViewAssetDialog = ({
     <Dialog
       open={viewDialog} // Dialog open/close based on viewDialog state
       onClose={handleViewDialogClose} // Closes dialog when clicked outside
+      fullScreen
       sx={{
         backdropFilter: "blur(1px)", // Adds a blur effect to the backdrop
+        backgroundColor: "rgb(250, 250, 250)", // Background color change
+        fontFamily:
+          "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'",
       }}
     >
       <DialogTitle
         sx={{
           fontWeight: "bold", // Bold title font
           fontSize: "1.2rem", // Font size for title
-          backgroundColor: "#f5f5f5", // Background color for title
+          backgroundColor: "white", // Background color for title
           padding: "16px", // Title padding
           position: "relative", // Position relative for close button
           display: "flex", // Use flexbox to align the title and button
@@ -112,9 +117,8 @@ const ViewAssetDialog = ({
             sx={{ display: "flex", alignItems: "center" }}
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <EditIcon sx={{ color: "black", marginRight: "8px" }} />{" "}
-               
-              <Typography variant="body1">Edit</Typography>  
+              <EditIcon sx={{ color: "black", marginRight: "8px" }} />
+              <Typography variant="body1">Edit</Typography>
             </Box>
           </MenuItem>
 
@@ -123,7 +127,7 @@ const ViewAssetDialog = ({
             sx={{ display: "flex", alignItems: "center" }}
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <DeleteIcon style={{ color: "#d32f2f",  marginRight: "8px"  }} />
+              <DeleteIcon style={{ color: "#d32f2f", marginRight: "8px" }} />
               <Typography variant="body1" color="error">
                 Delete
               </Typography>
@@ -132,79 +136,263 @@ const ViewAssetDialog = ({
         </Menu>
       </DialogTitle>
 
-      <DialogContent sx={{ padding: "24px" }}>
+      <DialogContent sx={{ padding: "24px", backgroundColor: "white" }}>
+        {/* Heading for the asset information */}
+        <Typography
+          variant="body1"
+          sx={{
+            fontWeight: "bold",
+            color: "text.primary",
+            marginBottom: "24px",
+            fontSize: "30px",
+          }}
+        >
+          Asset Information
+        </Typography>
+
         {/* Grid container to hold the asset details */}
+
         <Grid container spacing={3}>
-          {/* Each Grid item displays a label and the corresponding asset detail */}
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Asset Name:
-            </Typography>
-            <Typography variant="body1">{formData.name}</Typography>
+          {/* Asset Name */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Asset Name:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft:"200px"
+                }}
+              >
+                {formData.name}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Status:
-            </Typography>
-            <Typography variant="body1">{formData.status}</Typography>
+
+          {/* Status */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Status:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft:"250px"
+                }}
+              >
+                {formData.status}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Model:
-            </Typography>
-            <Typography variant="body1">{formData.model}</Typography>
+
+          {/* Model */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Model:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft:"250px"
+                }}
+              >
+                {formData.model}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Manufacturer:
-            </Typography>
-            <Typography variant="body1">{formData.manufacturer}</Typography>
+
+          {/* Manufacturer */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Manufacturer:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft:"190px"
+                }}
+              >
+                {formData.manufacturer}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Serial Number:
-            </Typography>
-            <Typography variant="body1">{formData.serialNumber}</Typography>
+
+          {/* Serial Number */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Serial Number:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft: "185px",
+                }}
+              >
+                {formData.serialNumber}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Description:
-            </Typography>
-            <Typography variant="body1">{formData.description}</Typography>
+
+          {/* Description */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Description:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft: "210px"
+                }}
+              >
+                {formData.description}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Created At:
-            </Typography>
-            <Typography variant="body1">
-              {new Date(formData.createdAt).toLocaleString("en-US", {
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: true,
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </Typography>
+
+          {/* Created At */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Created At:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft:"220px"
+                }}
+              >
+                {new Date(formData.createdAt).toLocaleString("en-US", {
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                  hour12: true,
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              Updated At:
-            </Typography>
-            <Typography variant="body1">
-              {formData.updatedAt
-                ? new Date(formData.updatedAt).toLocaleString("en-US", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    second: "numeric",
-                    hour12: true,
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })
-                : "N/A"}
-            </Typography>
+
+          {/* Updated At */}
+          <Grid item xs={12}>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  color: "#767676", // Applying the specified color
+                  fontSize: "1.25rem",
+                }}
+              >
+                Updated At:
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: "normal",
+                  fontSize: "1.25rem",
+                  marginLeft:"220px"
+                }}
+              >
+                {formData.updatedAt
+                  ? new Date(formData.updatedAt).toLocaleString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                      hour12: true,
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "N/A"}
+              </Typography>
+            </div>
+            <Divider sx={{ margin: "16px 0" }} />
           </Grid>
         </Grid>
       </DialogContent>

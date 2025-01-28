@@ -56,3 +56,5 @@ export const deleteAsset = async (id) => {
     throw error;
   }
 };
+
+ 

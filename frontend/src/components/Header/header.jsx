@@ -35,7 +35,7 @@ const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
         {/* Toggle Sidebar */}
         <Button
           variant="text"
-          sx={{ padding: 0, minWidth: "auto", marginRight: "20px" }}
+          sx={{ padding: 0, minWidth: "auto", marginLeft:"15px" ,  marginRight: "20px" }}
           onClick={handleMenuClick} // Close the sidebar when clicking the menu
         >
           <svg

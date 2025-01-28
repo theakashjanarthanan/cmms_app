@@ -75,7 +75,7 @@ const AssetDialog = ({
               />
             </Grid>
 
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 name="status"
                 select
@@ -89,7 +89,7 @@ const AssetDialog = ({
                 <MenuItem value="Operational">Operational</MenuItem>
                 <MenuItem value="Out of Service">Out of Service</MenuItem>
               </TextField>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               <TextField

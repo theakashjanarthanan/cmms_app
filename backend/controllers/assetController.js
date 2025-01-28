@@ -80,4 +80,5 @@ const deleteAsset = async (req, res) => {
   }
 };
 
+
 module.exports = {createAsset, getAllAssets, getSingleAsset , updateAsset, deleteAsset };

@@ -55,6 +55,7 @@ const AssetManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [setSelectedAssets] = useState([]);
 
   const [selectedColumns, setSelectedColumns] = useState([
     "name",
@@ -202,29 +203,41 @@ const AssetManagement = () => {
       }
     };
 
-  const handleDelete = async () => {
-    if (!assetToDelete) return;
-
-    try {
-      await deleteAsset(assetToDelete);
-      setAssets((prevAssets) =>
-        prevAssets.filter((asset) => asset._id !== assetToDelete)
-      );
-      setSnackbar({
-        open: true,
-        message: "Asset deleted successfully!",
-        type: "success",
-      });
-      handleDeleteDialogClose();
-    } catch (error) {
-      console.error("Error deleting asset:", error);
-      setSnackbar({
-        open: true,
-        message: "Failed to delete asset.",
-        type: "error",
-      });
-    }
-  };
+    const handleDelete = async () => {
+      if (!assetToDelete) return; // Check if assetToDelete is not null or undefined
+    
+      try {
+        // Assuming deleteAsset is an asynchronous function for deleting the asset
+        await deleteAsset(assetToDelete); 
+    
+        // Filter out the deleted asset from the current list of assets
+        setAssets((prevAssets) => 
+          prevAssets.filter((asset) => asset._id !== assetToDelete) 
+        );
+    
+        // Show success snackbar
+        setSnackbar({
+          open: true,
+          message: "Asset deleted successfully!",
+          type: "success",
+        });
+    
+        // Close the delete dialog
+        handleDeleteDialogClose();
+    
+      } catch (error) {
+        // Handle any error that occurs during the delete operation
+        console.error("Error deleting asset:", error);
+    
+        // Show error snackbar
+        setSnackbar({
+          open: true,
+          message: "Failed to delete asset.",
+          type: "error",
+        });
+      }
+    };
+    
 
   const handleDeleteDialogClose = () => {
     setAssetToDelete(null);
@@ -253,6 +266,7 @@ const AssetManagement = () => {
     setAnchorEl(null);
   };
 
+
   return (
     <Box sx={{ display: "flex" }}>
       <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
@@ -261,7 +275,6 @@ const AssetManagement = () => {
           flexGrow: 1,
           ml: `${sidebarWidth}px`,
           transition: "margin-left 0.3s ease",
-          p: 3,
         }}
       > 
         {/* Header Component */}
@@ -270,6 +283,9 @@ const AssetManagement = () => {
           toggleDrawer={toggleSidebar}
           buttonText="Create Asset"
           buttonAction={() => handleDialogOpen()}
+          sx={
+            {padding:"0"}
+          }
         />
 
         {/* AssetFilter component */}
@@ -285,17 +301,24 @@ const AssetManagement = () => {
           selectedColumns={selectedColumns}
         />
 
+        {/* Divider Line */}
+        <div className="h-px bg-gray-300"></div>
+
          {/* AssetFilter component */}
-         <AssetFilters
+        <Box sx={{padding: "20px"}} ><AssetFilters
           selectedStatus={selectedStatus}
           onStatusChange={setSelectedStatus}  
-        />
+        /></Box>
 
         {/* Asset Table Component */}
         <AssetTable
           assets={filteredOrders}
           selectedColumns={selectedColumns}
           onView={handleViewDialogOpen}
+          selectedAssets = {setSelectedAssets}
+          setSelectedAssets={setSelectedAssets}
+          setAssets={setAssets}
+
         />
 
         {/* View Asset Dialog Component */}

@@ -1,7 +1,7 @@
 // backend\routes\assetRoutes.js
 
 const express = require('express');
-const { createAsset, getAllAssets, getSingleAsset, updateAsset , deleteAsset} = require('../controllers/assetController');
+const { createAsset, getAllAssets, getSingleAsset, updateAsset , deleteAsset  } = require('../controllers/assetController');
 const router = express.Router();
 
 // POST: /api/assets - Route to create a new asset
@@ -18,5 +18,6 @@ router.put('/:id', updateAsset);
 
 // DELETE: /api/assets/:id - Delete an asset
 router.delete('/:id', deleteAsset);
+
 
 module.exports = router;

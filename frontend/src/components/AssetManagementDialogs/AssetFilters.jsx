@@ -158,7 +158,7 @@ const AssetFilters = ({ selectedStatus, onStatusChange }) => {
                   >
                     <MenuItem value="">All</MenuItem>
                     <MenuItem value="Operational">Operational</MenuItem>
-                    <MenuItem value="Out of Service">Out of Service</MenuItem>
+                    {/* <MenuItem value="Out of Service">Out of Service</MenuItem> */}
                   </Select>
                 </FormControl>
               </div>
