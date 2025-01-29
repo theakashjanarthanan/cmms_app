@@ -13,11 +13,11 @@ import {
 
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header/header";
-import AssetDialog from "../components/AssetManagementDialogs/AssetDialog";
-import AssetTable from "../components/AssetManagementDialogs/AssetTable";  
-import ViewAssetDialog from "../components/AssetManagementDialogs/ViewAssetDialog"
-import AssetOptions from "../components/AssetManagementDialogs/AssetOptions"; 
-import AssetFilters from "../components/AssetManagementDialogs/AssetFilters";
+import AssetDialog from "../components/AssetManagement/AssetDialog";
+import AssetTable from "../components/AssetManagement/AssetTable";  
+import AssetViewDialog from "../components/AssetManagement/AssetViewDialog"
+import AssetOptions from "../components/AssetManagement/AssetOptions"; 
+import AssetFilters from "../components/AssetManagement/AssetFilters";
 
 import {
   fetchAssets,
@@ -321,15 +321,6 @@ const AssetManagement = () => {
 
         />
 
-        {/* View Asset Dialog Component */}
-        <ViewAssetDialog
-          viewDialog={viewDialog}
-          handleViewDialogClose={handleViewDialogClose}
-          formData={formData}
-          onEdit={handleDialogOpen}
-          onDelete={handleDeleteDialogOpen}
-        />
-
         {/* Asset Creation / Updation Component */}
         <AssetDialog
           open={openDialog}
@@ -340,8 +331,16 @@ const AssetManagement = () => {
           formData={formData}
           handleChange={handleChange}
         />
-
       </Box>
+
+      {/* View Asset Dialog Component */}
+      <AssetViewDialog
+          viewDialog={viewDialog}
+          handleViewDialogClose={handleViewDialogClose}
+          formData={formData}
+          onEdit={handleDialogOpen}
+          onDelete={handleDeleteDialogOpen}
+      />
       
       {/* Delete Dialog */}
       <Dialog open={deleteDialog} onClose={handleDeleteDialogClose}>

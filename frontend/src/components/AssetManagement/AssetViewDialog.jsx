@@ -1,4 +1,6 @@
-import React, { useState } from "react"; // Importing React to define the component
+// frontend\src\components\AssetManagementDialogs\ViewAssetDialog.jsx
+
+import React, { useState } from "react";  
 import {
   Dialog,
   DialogContent,
@@ -9,14 +11,14 @@ import {
   Menu,
   MenuItem,
   Box,
-} from "@mui/material"; // Importing Material UI components
-import ArrowBackIcon from "@mui/icons-material/ArrowBack"; // Importing ArrowBack Icon
-import MoreVertIcon from "@mui/icons-material/MoreVert"; // Importing MoreVert Icon (three-dot menu)
+} from "@mui/material"; 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";  
+import MoreVertIcon from "@mui/icons-material/MoreVert";  
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Divider from "@mui/material/Divider";
 
-const ViewAssetDialog = ({
+const AssetViewDialog = ({
   viewDialog, // State variable to control dialog visibility
   handleViewDialogClose, // Function to close the dialog
   formData, // Object containing asset data to display
@@ -172,7 +174,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft:"200px"
+                  marginLeft: "200px",
                 }}
               >
                 {formData.name}
@@ -200,7 +202,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft:"250px"
+                  marginLeft: "250px",
                 }}
               >
                 {formData.status}
@@ -228,7 +230,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft:"250px"
+                  marginLeft: "250px",
                 }}
               >
                 {formData.model}
@@ -256,7 +258,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft:"190px"
+                  marginLeft: "190px",
                 }}
               >
                 {formData.manufacturer}
@@ -312,7 +314,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft: "210px"
+                  marginLeft: "210px",
                 }}
               >
                 {formData.description}
@@ -340,7 +342,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft:"220px"
+                  marginLeft: "220px",
                 }}
               >
                 {new Date(formData.createdAt).toLocaleString("en-US", {
@@ -376,7 +378,7 @@ const ViewAssetDialog = ({
                   color: "text.primary",
                   fontWeight: "normal",
                   fontSize: "1.25rem",
-                  marginLeft:"220px"
+                  marginLeft: "220px",
                 }}
               >
                 {formData.updatedAt
@@ -400,4 +402,4 @@ const ViewAssetDialog = ({
   );
 };
 
-export default ViewAssetDialog;
+export default AssetViewDialog;

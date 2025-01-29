@@ -1,3 +1,5 @@
+// frontend\src\components\AssetManagementDialogs\AssetTable.jsx
+
 import React, { useState } from "react";
 import {
   Table,

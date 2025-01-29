@@ -1,3 +1,5 @@
+// frontend\src\components\AssetManagementDialogs\AssetFilters.jsx
+
 import React, { useState } from "react";
 import {
   MenuItem,
@@ -74,57 +76,56 @@ const AssetFilters = ({ selectedStatus, onStatusChange }) => {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        marginTop:"2px"
+        marginTop: "2px",
       }}
-    > 
-   <Button
-  variant="contained"
-  color="primary"
-  sx={{
-    display: "inline-flex",
-    alignItems: "center",
-    padding: "3px 20px",
-    fontSize: "14px",
-    borderRadius: "5px",
-    backgroundColor: "white",
-    color: "black",
-    border:"1px solid rgb(184, 184, 184)",
-    boxShadow: "none",  // Remove shadow
-    "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.08)", // Add hover background color effect 
-      borderColor: "rgb(155, 155, 155)", // Change border color on hover
-    }
-  }}
-  onClick={handleFilterButtonClick}
-  data-cy="FilterBar-filters-button"
->
-  {/* Inline SVG Icon */}
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{ marginRight: "8px" }}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M9 7a1 1 0 100 2 1 1 0 000-2zM6 8a3 3 0 116 0 3 3 0 01-6 0z"
-    />
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M2 8a1 1 0 011-1h4a1 1 0 010 2H3a1 1 0 01-1-1zM10 8a1 1 0 011-1h10a1 1 0 110 2H11a1 1 0 01-1-1zM15 15a1 1 0 100 2 1 1 0 000-2zm-3 1a3 3 0 116 0 3 3 0 01-6 0z"
-    />
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M2 16a1 1 0 011-1h10a1 1 0 110 2H3a1 1 0 01-1-1zM16 16a1 1 0 011-1h4a1 1 0 110 2h-4a1 1 0 01-1-1z"
-    />
-  </svg>
-  Filters
-</Button>
-
+    >
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          padding: "3px 20px",
+          fontSize: "14px",
+          borderRadius: "5px",
+          backgroundColor: "white",
+          color: "black",
+          border: "1px solid rgb(184, 184, 184)",
+          boxShadow: "none", // Remove shadow
+          "&:hover": {
+            backgroundColor: "rgba(0, 0, 0, 0.08)", // Add hover background color effect
+            borderColor: "rgb(155, 155, 155)", // Change border color on hover
+          },
+        }}
+        onClick={handleFilterButtonClick}
+        data-cy="FilterBar-filters-button"
+      >
+        {/* Inline SVG Icon */}
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ marginRight: "8px" }}
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M9 7a1 1 0 100 2 1 1 0 000-2zM6 8a3 3 0 116 0 3 3 0 01-6 0z"
+          />
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M2 8a1 1 0 011-1h4a1 1 0 010 2H3a1 1 0 01-1-1zM10 8a1 1 0 011-1h10a1 1 0 110 2H11a1 1 0 01-1-1zM15 15a1 1 0 100 2 1 1 0 000-2zm-3 1a3 3 0 116 0 3 3 0 01-6 0z"
+          />
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M2 16a1 1 0 011-1h10a1 1 0 110 2H3a1 1 0 01-1-1zM16 16a1 1 0 011-1h4a1 1 0 110 2h-4a1 1 0 01-1-1z"
+          />
+        </svg>
+        Filters
+      </Button>
 
       {/* Dialog for Filters */}
       <Dialog open={openDialog} onClose={handleCancel} fullWidth>
@@ -188,14 +189,14 @@ const AssetFilters = ({ selectedStatus, onStatusChange }) => {
               padding: "8px 16px",
               fontSize: "15px",
               lineHeight: "20px",
-              backgroundColor: "white",  
-              color: "black", 
+              backgroundColor: "white",
+              color: "black",
               borderRadius: "4px",
               marginRight: "16px",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.08)", 
-              borderColor: "rgb(155, 155, 155)", 
-            }
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.08)",
+                borderColor: "rgb(155, 155, 155)",
+              },
             }}
           >
             Cancel

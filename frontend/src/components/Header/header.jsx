@@ -35,7 +35,12 @@ const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
         {/* Toggle Sidebar */}
         <Button
           variant="text"
-          sx={{ padding: 0, minWidth: "auto", marginLeft:"15px" ,  marginRight: "20px" }}
+          sx={{
+            padding: 0,
+            minWidth: "auto",
+            marginLeft: "15px",
+            marginRight: "20px",
+          }}
           onClick={handleMenuClick} // Close the sidebar when clicking the menu
         >
           <svg
@@ -73,9 +78,14 @@ const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
         <Typography
           variant="h6"
           sx={{
+            marginTop: "5px",
             marginRight: "16px",
-            fontSize: "16px",
+            fontSize: "20px",
             fontWeight: "600",
+            color: "rgb(50, 50, 51);",
+            lineHeight: "24px",
+            fontFamily:
+              "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'",
           }}
         >
           {title}
@@ -95,17 +105,26 @@ const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
           color="primary"
           sx={{
             height: "36px",
-            width: "160px",
+            width: "fit-content", // Adjusts the button width to fit content
             padding: "8px 16px",
-            fontSize: "15px",
+            fontSize: "16px",
             lineHeight: "20px",
-            fontWeight: "600",
-            backgroundColor: "rgb(12, 111, 249)",
-            color: "rgb(255, 255, 255)",
-            borderRadius: "4px",
-            marginRight: "16px",
+            fontWeight: "normal", // Ensures normal font weight
+            backgroundColor: "rgb(12, 111, 249)", // Background color
+            color: "rgb(255, 255, 255)", // Text color
+            borderRadius: "4px", // Border radius
+            textAlign: "center", // Text alignment in center
+            display: "flex", // Flex display
+            justifyContent: "center", // Centers the content
+            alignItems: "center", // Aligns items in the center
+            textTransform: "none", // Prevents text transformation (no uppercase)
+            fontFamily:
+              "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'", // Custom font family
+            cursor: "pointer", // Makes the button clickable
+            transition: "background-color 250ms", // Smooth background color transition
+            marginRight: "50px",
             "&:hover": {
-              backgroundColor: "rgb(8, 85, 200)",
+              backgroundColor: "rgb(12, 111, 249)", // Maintain color on hover
             },
           }}
           onClick={buttonAction}
@@ -118,5 +137,3 @@ const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
 };
 
 export default Header;
-
-

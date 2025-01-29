@@ -1,4 +1,6 @@
-import React from "react"; 
+//frontend\src\components\AssetManagementDialogs\AssetDialog.jsx
+
+import React from "react";
 import {
   Drawer,
   DialogTitle,
@@ -8,16 +10,16 @@ import {
   Grid,
   TextField,
   MenuItem,
-} from "@mui/material";  
+} from "@mui/material";
 
 const AssetDialog = ({
-  open,  
-  onClose,  
-  onSubmit,  
-  loading,  
-  editingAsset,  
-  formData, 
-  handleChange,  
+  open,
+  onClose,
+  onSubmit,
+  loading,
+  editingAsset,
+  formData,
+  handleChange,
 }) => {
   return (
     <Drawer
@@ -29,16 +31,19 @@ const AssetDialog = ({
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: 500, // Set the width of the drawer
-          padding: 3,  // Add padding inside the drawer
+          padding: 3, // Add padding inside the drawer
         },
       }}
     >
       <DialogTitle>{editingAsset ? "Edit Asset" : "Create Asset"}</DialogTitle>
       <DialogContent>
-        <form onSubmit={onSubmit}> {/* Form submission handler */}
-          <Grid container spacing={3}> {/* Grid layout for the form */}
+        <form onSubmit={onSubmit}>
+          {" "}
+          {/* Form submission handler */}
+          <Grid container spacing={3}>
+            {" "}
+            {/* Grid layout for the form */}
             {/* Stack all fields vertically by ensuring each Grid item takes full width */}
-            
             <Grid item xs={12}>
               <TextField
                 name="name"
@@ -50,7 +55,6 @@ const AssetDialog = ({
                 margin="normal"
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 name="description"
@@ -63,7 +67,6 @@ const AssetDialog = ({
                 rows={3}
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 name="model"
@@ -74,7 +77,6 @@ const AssetDialog = ({
                 margin="normal"
               />
             </Grid>
-
             {/* <Grid item xs={12}>
               <TextField
                 name="status"
@@ -90,7 +92,6 @@ const AssetDialog = ({
                 <MenuItem value="Out of Service">Out of Service</MenuItem>
               </TextField>
             </Grid> */}
-
             <Grid item xs={12}>
               <TextField
                 name="category"
@@ -101,15 +102,25 @@ const AssetDialog = ({
                 fullWidth
                 margin="normal"
               >
-                <MenuItem value="" disabled>Select Category</MenuItem>
-                {["None", "Damage", "Electrical", "Inspection", "Meter", "Preventative", "Project", "Safety"].map((option) => (
+                <MenuItem value="" disabled>
+                  Select Category
+                </MenuItem>
+                {[
+                  "None",
+                  "Damage",
+                  "Electrical",
+                  "Inspection",
+                  "Meter",
+                  "Preventative",
+                  "Project",
+                  "Safety",
+                ].map((option) => (
                   <MenuItem key={option} value={option}>
                     {option}
                   </MenuItem>
                 ))}
               </TextField>
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 name="serialNumber"
@@ -120,7 +131,6 @@ const AssetDialog = ({
                 margin="normal"
               />
             </Grid>
-
             <Grid item xs={12}>
               <TextField
                 name="manufacturer"
@@ -136,7 +146,9 @@ const AssetDialog = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} color="secondary">Close</Button>
+        <Button onClick={onClose} color="secondary">
+          Close
+        </Button>
         <Button
           onClick={onSubmit}
           color="primary"
