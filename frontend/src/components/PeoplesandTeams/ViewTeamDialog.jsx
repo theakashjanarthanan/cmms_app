@@ -1,4 +1,4 @@
-// frontend\src\components\TeamsComponents.jsx
+// frontend\src\components\PeoplesandTeams\ViewTeamDialog.jsx
 
 import React from "react";
 import {

@@ -41,18 +41,25 @@ const AssetTable = ({
     setSortConfig({ key, direction: isAscending ? "desc" : "asc" });
   };
 
-  const handleSelect = (assetId) => {
-    setSelectedAssets((prevSelected) => {
-      const updatedSelected = prevSelected.includes(assetId)
-        ? prevSelected.filter((id) => id !== assetId)
-        : [...prevSelected, assetId];
+  // Define the useEffect to handle the toast visibility based on selectedAssets
+React.useEffect(() => {
+  if (selectedAssets.length > 0) {
+    setToastOpen(true); // Show the toast when assets are selected
+  }
+}, [selectedAssets]); // This runs whenever selectedAssets changes
 
-      // Show the toast when assets are selected or deselected
-      setToastOpen(true);
+const handleSelect = (assetId) => {
+  setSelectedAssets((prevSelected) => {
+    // Toggle the selection of the asset
+    const updatedSelected = prevSelected.includes(assetId)
+      ? prevSelected.filter((id) => id !== assetId)
+      : [...prevSelected, assetId];
 
-      return updatedSelected;
-    });
-  };
+    return updatedSelected; // Return the updated selected assets list
+  });
+};
+
+  
 
   const handleRowClick = (event, asset) => {
     // Prevent view dialog trigger if checkbox is clicked
@@ -84,14 +91,36 @@ const AssetTable = ({
   const handleToastClose = () => setToastOpen(false);
 
   // Delete selected assets
-  const handleDelete = () => {
-    const remainingAssets = assets.filter(
-      (asset) => !selectedAssets.includes(asset._id),
-    );
-    setAssets(remainingAssets); // Update the assets state by passing the updated list
-    setSelectedAssets([]); // Clear the selected assets after deletion
-    setToastOpen(false); // Close the toast after deletion
+  const handleDelete = async () => {
+    try {
+      // Loop through the selected assets and delete them one by one
+      for (const assetId of selectedAssets) {
+        const response = await fetch(`http://localhost:5000/api/assets/${assetId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Failed to delete asset with ID ${assetId}`);
+        }
+      }
+  
+      // After deletion, update the assets state
+      const remainingAssets = assets.filter(
+        (asset) => !selectedAssets.includes(asset._id)
+      );
+      setAssets(remainingAssets); // Update the assets state with the remaining assets
+  
+      // Reset the selected assets and close the toast
+      setSelectedAssets([]);
+      setToastOpen(false);
+    } catch (error) {
+      console.error("Error deleting assets:", error);
+    }
   };
+  
 
   return (
     <div style={{ height: "100%", width: "100%", overflow: "auto" }}>

@@ -29,9 +29,9 @@ import {
   fetchUsers,
   updateTeam,
   deleteTeam,
-} from "../api/api"
+} from "../../api/api";
 
-import ViewTeamDialog from "../pages/ViewTeamDialog";
+import ViewTeamDialog from "../PeoplesandTeams/ViewTeamDialog";
 
 const Teams = () => {
   const [openDialog, setOpenDialog] = useState(false);

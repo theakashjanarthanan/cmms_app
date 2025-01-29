@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
+import { MoreHorizontal } from "lucide-react"; 
 // import { useNavigate } from "react-router-dom";
 
 const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
@@ -131,6 +132,14 @@ const Header = ({ title, toggleDrawer, buttonText, buttonAction }) => {
         >
           {buttonText}
         </Button>
+
+               {/* Three Dot Menu */}
+       <div className="relative">
+         <button className="p-2 pr-6 rounded-full hover:bg-white-200">
+           <MoreHorizontal className="h-6 w-6 text-gray-600" />
+         </button>
+       </div>
+ 
       </Box>
     </Box>
   );

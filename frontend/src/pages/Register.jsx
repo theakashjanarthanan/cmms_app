@@ -101,11 +101,9 @@ const Register = () => {
                 >
                 {[
                     "Admin",
-                    "Inventory Manager",
-                    "Technician",
-                    "Manager",
-                    "Guest",
                     "Requestor",
+                    "Technician",
+                    "Guest",
                 ].map((role) => (
                     <MenuItem key={role} value={role}>
                     {role}

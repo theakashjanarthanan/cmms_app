@@ -19,7 +19,8 @@ const registerUser = async (req, res) => {
             fullName,
             email,
             password: hashedPassword,
-            role
+            role,
+            dateCreated: new Date()  // Set dateCreated during registration 
         });
 
         await newUser.save();
@@ -44,6 +45,10 @@ const loginUser = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
+
+        // Update lastLogin time
+        user.lastLogin = new Date();
+        await user.save();
 
         const token = jwt.sign(
             { user: { id: user._id, fullName: user.fullName, role: user.role } },
@@ -108,4 +113,4 @@ const assignRole = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getUsers , deleteUser , assignRole};
+module.exports = { registerUser, loginUser, getUsers, deleteUser, assignRole };

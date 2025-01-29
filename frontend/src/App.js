@@ -9,7 +9,6 @@ import AuthContext from './context/AuthContext';
 import Login from './pages/Login';                                          // Login Page
 import Register from './pages/Register';                                    // Register Page
 import Dashboard from './pages/Dashboard';                                  // Dashbboard Page
-import UserManagement from './pages/UserManagement';                        // User Management Page
 import AssetManagement from "./pages/AssetManagement";                      // Asset Management Page
 import PeoplesAndTeamPage from './pages/PeoplesAndTeamPage';                // Peoples and Team Page
 import TechnicianPortalPage from './pages/TechnicianPortalPage';            // Technician Portal
@@ -19,9 +18,8 @@ import PartsAndInventoryPage from './pages/PartsAndInventoryPage';          // P
 import Requests from './pages/Requests';                                    // Requests Management Page
 import PurchaseOrderPage from './pages/PurchaseOrderPage';                  // Purchase Order Portal
 
- 
 const App = () => {
-    const { auth, user } = useContext(AuthContext);
+    const { auth } = useContext(AuthContext);
 
     return (
         <Router>
@@ -37,8 +35,8 @@ const App = () => {
 
                 {/* Asset Management Route */}
                 <Route
-                path="/asset-management"
-                element={auth ? <AssetManagement /> : <Navigate to="/asset-management" />}
+                    path="/asset-management"
+                    element={auth ? <AssetManagement /> : <Navigate to="/asset-management" />}
                 />
 
                 {/* Preventive Maintenance Route */}
@@ -52,7 +50,7 @@ const App = () => {
                     path="/work-orders-management"
                     element={auth ? <WorkOrdersManagementPage /> : <Navigate to="/work-orders-management" />}
                 />
-                
+
                 {/* Peoples and Team Route */}
                 <Route
                     path="/peoples-and-team"
@@ -60,33 +58,23 @@ const App = () => {
                 />
 
                 {/* Technician Portal Route */}
-                  <Route 
-                  path="/technician-portal" 
-                  element={auth ? <TechnicianPortalPage /> : <Navigate to="/technician-portal" />} />
+                <Route
+                    path="/technician-portal"
+                    element={auth ? <TechnicianPortalPage /> : <Navigate to="/technician-portal" />} />
 
                 {/* Purchase Order Route */}
-                  <Route 
-                  path="/purchase-order" 
-                  element={auth ? <PurchaseOrderPage /> : <Navigate to="/purchase-order" />} />
-
-                {/* Protect User Management route: Only accessible by Admin users */}
                 <Route
-                    path="/user-management"
-                    element={auth && user?.role === 'Admin' ? <UserManagement /> : <Navigate to="/user-management" />}
-                />
-
-                {/* User Management Route  */}
-                <Route path="/user-management" element={<UserManagement />} />
-
+                    path="/purchase-order"
+                    element={auth ? <PurchaseOrderPage /> : <Navigate to="/purchase-order" />} />
 
                 {/* Request Management Route */}
                 <Route path="/requests" element={<Requests />} />
 
 
-                 {/* Parts and Inventory Route */}
+                {/* Parts and Inventory Route */}
                 <Route
-                path="/parts-and-inventory"
-                element={auth ? <PartsAndInventoryPage /> : <Navigate to="/parts-and-inventory" />}
+                    path="/parts-and-inventory"
+                    element={auth ? <PartsAndInventoryPage /> : <Navigate to="/parts-and-inventory" />}
                 />
             </Routes>
         </Router>
