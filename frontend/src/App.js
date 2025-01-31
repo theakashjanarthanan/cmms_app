@@ -10,6 +10,7 @@ import Login from './pages/Login';                                          // L
 import Register from './pages/Register';                                    // Register Page
 import Dashboard from './pages/Dashboard';                                  // Dashbboard Page
 import AssetManagement from "./pages/AssetManagement";                      // Asset Management Page
+import ViewAssetPage from "./pages/ViewAssetPage";                          // View Assets Page
 import PeoplesAndTeamPage from './pages/PeoplesAndTeamPage';                // Peoples and Team Page
 import TechnicianPortalPage from './pages/TechnicianPortalPage';            // Technician Portal
 import PreventiveMaintenancePage from './pages/PreventiveMaintenancePage';  // Preventive Maintenance Page
@@ -38,6 +39,8 @@ const App = () => {
                     path="/asset-management"
                     element={auth ? <AssetManagement /> : <Navigate to="/asset-management" />}
                 />
+                {/* Asset Management - ViewAssetPage */}
+                <Route path="/assets/view/:id" element={<ViewAssetPage />} />
 
                 {/* Preventive Maintenance Route */}
                 <Route

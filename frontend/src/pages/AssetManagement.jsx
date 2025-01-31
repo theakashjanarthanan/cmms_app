@@ -1,33 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Button,
   Box,
   Snackbar,
   Alert,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography
 } from "@mui/material";
 
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header/header";
 import AssetDialog from "../components/AssetManagement/AssetDialog";
-import AssetTable from "../components/AssetManagement/AssetTable";  
-import AssetViewDialog from "../components/AssetManagement/AssetViewDialog"
-import AssetOptions from "../components/AssetManagement/AssetOptions"; 
+import AssetTable from "../components/AssetManagement/AssetTable";
+import AssetOptions from "../components/AssetManagement/AssetOptions";
 import AssetFilters from "../components/AssetManagement/AssetFilters";
 
 import {
   fetchAssets,
   createAsset,
-  updateAsset,
-  deleteAsset,
-  fetchSingleAsset,
 } from "../api/assetapi";
 
 const AssetManagement = () => {
+  const navigate = useNavigate();
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -39,9 +31,6 @@ const AssetManagement = () => {
     serialNumber: null,
   });
   const [openDialog, setOpenDialog] = useState(false);
-  const [viewDialog, setViewDialog] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [assetToDelete, setAssetToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -120,16 +109,6 @@ const AssetManagement = () => {
     setOpenDialog(false);
   };
 
-  const handleViewDialogClose = () => {
-    setViewDialog(false);
-  };
-
-  const handleDeleteDialogOpen = (assetId) => {
-    setAssetToDelete(assetId);
-    setDeleteDialog(true);
-  };
-
-
   const resetForm = () => {
     setFormData({
       name: "",
@@ -155,94 +134,26 @@ const AssetManagement = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (editingAsset) {
-        await updateAsset(editingAsset, formData);
-        setAssets((prevAssets) =>
-          prevAssets.map((asset) =>
-            asset._id === editingAsset ? { ...asset, ...formData } : asset
-          )
-        );
-        setSnackbar({
-          open: true,
-          message: "Asset updated successfully!",
-          type: "success",
-        });
-      } else {
-        const data = await createAsset(formData);
-        setAssets((prevAssets) => [...prevAssets, data]);
-        setSnackbar({
-          open: true,
-          message: "Asset created successfully!",
-          type: "success",
-        });
-      }
-      handleDialogClose();
+      // Handle asset creation
+      const data = await createAsset(formData);
+      setAssets((prevAssets) => [...prevAssets, data]);  
+      setSnackbar({
+        open: true,
+        message: "Asset created successfully!",
+        type: "success",
+      });
+      handleDialogClose();  
+      console.log("Asset Created Successfully")
     } catch (error) {
       setSnackbar({
         open: true,
-        message: "Failed to save asset. Please try again.",
+        message: "Failed to create asset. Please try again.",
         type: "error",
       });
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
-  };
-
-    const handleViewDialogOpen = async (asset) => {
-      try {
-        const fetchedAsset = await fetchSingleAsset(asset._id);
-        setFormData(fetchedAsset);
-        setViewDialog(true);
-      } catch (error) {
-        console.error("Error fetching asset details:", error);
-        setSnackbar({
-          open: true,
-          message: "Error fetching asset details.",
-          type: "error",
-        });
-      }
-    };
-
-    const handleDelete = async () => {
-      if (!assetToDelete) return; // Check if assetToDelete is not null or undefined
-    
-      try {
-        // Assuming deleteAsset is an asynchronous function for deleting the asset
-        await deleteAsset(assetToDelete); 
-    
-        // Filter out the deleted asset from the current list of assets
-        setAssets((prevAssets) => 
-          prevAssets.filter((asset) => asset._id !== assetToDelete) 
-        );
-    
-        // Show success snackbar
-        setSnackbar({
-          open: true,
-          message: "Asset deleted successfully!",
-          type: "success",
-        });
-    
-        // Close the delete dialog
-        handleDeleteDialogClose();
-    
-      } catch (error) {
-        // Handle any error that occurs during the delete operation
-        console.error("Error deleting asset:", error);
-    
-        // Show error snackbar
-        setSnackbar({
-          open: true,
-          message: "Failed to delete asset.",
-          type: "error",
-        });
-      }
-    };
-    
-
-  const handleDeleteDialogClose = () => {
-    setAssetToDelete(null);
-    setDeleteDialog(false);
-  };
+  };  
 
   const toggleSidebar = () => {
     setIsSidebarMinimized((prev) => !prev);
@@ -266,6 +177,9 @@ const AssetManagement = () => {
     setAnchorEl(null);
   };
 
+  const handleViewPage = (asset) => {
+    navigate(`/assets/view/${asset._id}`);
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -276,7 +190,7 @@ const AssetManagement = () => {
           ml: `${sidebarWidth}px`,
           transition: "margin-left 0.3s ease",
         }}
-      > 
+      >
         {/* Header Component */}
         <Header
           title="Assets"
@@ -284,7 +198,7 @@ const AssetManagement = () => {
           buttonText="Create Asset"
           buttonAction={() => handleDialogOpen()}
           sx={
-            {padding:"0"}
+            { padding: "0" }
           }
         />
 
@@ -304,18 +218,18 @@ const AssetManagement = () => {
         {/* Divider Line */}
         <div className="h-px bg-gray-300"></div>
 
-         {/* AssetFilter component */}
-        <Box sx={{padding: "20px"}} ><AssetFilters
+        {/* AssetFilter component */}
+        <Box sx={{ padding: "20px" }} ><AssetFilters
           selectedStatus={selectedStatus}
-          onStatusChange={setSelectedStatus}  
+          onStatusChange={setSelectedStatus}
         /></Box>
 
         {/* Asset Table Component */}
         <AssetTable
           assets={filteredOrders}
           selectedColumns={selectedColumns}
-          onView={handleViewDialogOpen}
-          selectedAssets = {setSelectedAssets}
+          onView={handleViewPage}
+          selectedAssets={setSelectedAssets}
           setSelectedAssets={setSelectedAssets}
           setAssets={setAssets}
 
@@ -332,29 +246,6 @@ const AssetManagement = () => {
           handleChange={handleChange}
         />
       </Box>
-
-      {/* View Asset Dialog Component */}
-      <AssetViewDialog
-          viewDialog={viewDialog}
-          handleViewDialogClose={handleViewDialogClose}
-          formData={formData}
-          onEdit={handleDialogOpen}
-          onDelete={handleDeleteDialogOpen}
-      />
-      
-      {/* Delete Dialog */}
-      <Dialog open={deleteDialog} onClose={handleDeleteDialogClose}>
-          <DialogTitle>Delete Asset</DialogTitle>
-          <DialogContent>
-            <Typography>Are you sure you want to delete this asset?</Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDeleteDialogClose}>Cancel</Button>
-            <Button onClick={handleDelete} color="error">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
 
       {/* Snackbar for notifications */}
       <Snackbar
