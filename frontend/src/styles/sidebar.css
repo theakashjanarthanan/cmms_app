@@ -1,278 +1,178 @@
-/* General styles */
-* {
-    box-sizing: border-box;
+/* Sidebar styles */
+.sidebar {
+  width: 258px;
+  height: 100vh;
+  background: rgb(50, 50, 51);
+  color: white;
+  padding-top: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  transition: transform 0.3s ease; /* Smooth transition for both transform and visibility */
+  transform: translateX(0); /* Sidebar starts visible */
+  z-index: 10; /* Set a base z-index for sidebar */
 }
 
-html, body, input, textarea, select, button {
-    font-family: Lato, "Open Sans", sans-serif;
-    font-weight: 400;
-    line-height: 20px;
+/* Sidebar minimized styles (for hiding the sidebar) */
+.sidebar.minimized {
+  transform: translateX(-100%); /* Move sidebar off-screen when minimized */
+  visibility: hidden; /* Hide the sidebar visually after the transition completes */
+  overflow: hidden; /* Prevent any overflow when hidden */
+  transition: transform 0.3s ease, visibility 0s 0.3s; /* Make the hide transition slower */
 }
 
-/* Container styles */
-.sidebar-container {
-    position: fixed;
-    top: 0;
-    width: 260px;
-    height: 100%;
-    background: rgb(50, 50, 51);
-    z-index: 21;
-    transition: transform 300ms ease, width 300ms ease; /* Added easing for smooth animation */
-    transform: translateX(0);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-.sidebar-container.minimized {
-    width: 70px; /* Minimized width */
-    transform: translateX(-190px); /* Adjust sidebar position when minimized */
-}
-
-/* Header styles */
+/* Sidebar header styles */
 .sidebar-header {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    color: #ffffff;
-    margin-bottom: 24px;
-    padding: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    position: relative;
-    right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  font-family: 'Inter', sans-serif;
+  position: relative; /* Ensure the dropdown is positioned relative to this container */
+  z-index: 20; /* Ensure the header stays on top of the sidebar links */
 }
 
-.sidebar-header-title {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+/* Header left styles */
+.header-left {
+  display: flex;
+  align-items: center;
+  margin-left:10px ;
 }
 
-.minimize-button {
-    background: none;
-    border: none;
-    color: #ffffff;
-    cursor: pointer;
-    font-size: 18px;
-    transition: transform 0.3s;
-    margin-left: 10px;
+/* Settings Icon */
+.settings-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
 }
 
-.minimize-button:hover {
-    transform: scale(1.1);
+/* Header right styles */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-/* List styles */
-.sidebar-list {
-    flex-grow: 1;
-    padding: 0;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    right: 15px;
+/* Notification and profile icon styles */
+.notification-icon {
+  font-size: 20px;
+  cursor: pointer;
 }
 
-/* List item styles */
-.sidebar-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    color: rgb(255, 255, 255);
-    text-decoration: none;
-    width: 100%;
-    transition: background-color 0.3s, color 0.3s;
+.profile-icon {
+  cursor: pointer;
+  margin-right: 20px;
 }
 
-.sidebar-item:hover {
-    background-color: #616161;
-     
+/* Profile dropdown positioning */
+.profile-dropdown {
+  position: absolute;
+  top: 30px;  /* Adjust based on your header height */
+  left: 96%; /* Adjust to the position you prefer */
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(18, 2, 2, 0.237);
+  z-index: 9999;  /* Ensure this is high enough to appear above everything else */
+  border-radius: 5px;
+  width: 130px;
+  transform: scale(0); /* Start from a small size (zoom out) */
+  transform-origin: top; /* Makes sure it zooms from the top */
+  opacity: 0; /* Initially hidden */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+  
 }
 
-/* Icon styles */
-.sidebar-icon {
-    min-width: 40px;
-    color: #888;
-    display: flex;
-    justify-content: center;
+/* When dropdown is open */
+.profile-dropdown.open {
+  transform: scale(1); /* Zoom in to original size */
+  opacity: 1; /* Make it visible */
 }
 
-.sidebar-icon.hidden {
-    visibility: hidden;
+/* Profile dropdown list styles */
+.profile-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Added font-family */
+  font-size: var(--dropdown-font-size, 15px); /* Added editable font size variable */
 }
 
-/* Text styles */
-.sidebar-text {
-    font-size: 16px;
-    font-weight: 500;
+.profile-dropdown li {
+  padding: 5px;
 }
 
-.sidebar-container.minimized .sidebar-text {
-    display: none;
+.profile-dropdown a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+  font-family: inherit; /* Ensures inherited font family */
+
 }
 
-/* Divider styles */
+.profile-dropdown a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Module icon styles */
+.module-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Sidebar divider styles */
 .sidebar-divider {
-    margin: 16px 0;
-    border-color: #444;
+  margin: 10px 0;
+  height: 1px;
+  border: 0;
+  background-color: rgb(75, 75, 75);
 }
 
-/* Logout styles */
-.logout {
-    position: fixed;
-    bottom: 0;
-    width: 260px;
-    background-color: #ffeded;
+/* Sidebar link styles */
+.sidebar-link {
+  display: flex;
+  width: 100%;
+  text-decoration: none;
+  color: white;
+  font-family: 'Inter', sans-serif;
 }
 
-.logout:hover {
-    background-color: #ffd2d2;
-    color: #b71c1c;
+.sidebar-link li {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
 }
 
-.sidebar-container.minimized .logout {
-    width: 70px;
+/* Hover effect for sidebar links */
+.sidebar ul li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Scrollbar styles */
-.sidebar-list::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+/* Active sidebar link styles */
+.sidebar-link.active-sidebar-link {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
-.sidebar-list::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
+/* New transition effect for closing profile dropdown */
+.profile-dropdown.closing {
+  transform: scale(0); /* Zoom out */
+  opacity: 0; /* Fade out */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+}
+.profile-info.always-visible {
+  font-weight: 500;
+  color: #333; /* Adjust color based on theme */
+}
+.profile-info-container {
+  display: flex;
 }
 
-.sidebar-list::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
+.profile-name {
+  margin-left: 1; /* Adjust the space between the icon and the name */
 }
-
-.sidebar-list::-webkit-scrollbar-track {
-    background-color: #333;
-    border-radius: 4px;
-}
-
-/* Handle sidebar minimized state */
-.sidebar-container.minimized {
-    width: 60px; /* Minimized width */
-}
-
-.sidebar-header span {
-    display: inline-block;
-}
-
-.sidebar-header .minimize-button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-}
-
-.sidebar-list {
-    transition: all 0.3s ease;
-}
-
-.sidebar-container.minimized .sidebar-text {
-    display: none; /* Hide text in minimized state */
-}
-
-.sidebar-container.minimized .sidebar-icon {
-    font-size: 24px; /* Smaller icons in minimized state */
-}
-
-/* Responsive Styles */
-
-/* For tablet and small desktop screens */
-@media (max-width: 1024px) {
-    .sidebar-container {
-        width: 200px; /* Reduce sidebar width on medium screens */
-    }
-
-    .sidebar-container.minimized {
-        width: 60px; /* Keep minimized state */
-    }
-
-    .sidebar-header {
-        font-size: 16px; /* Smaller title */
-        padding: 12px;
-    }
-
-    .sidebar-text {
-        font-size: 14px;
-    }
-
-    .sidebar-item {
-        padding: 10px 14px;
-    }
-
-    .logout {
-        width: 200px; /* Adjust logout button */
-    }
-}
-
-/* For mobile screens */
-@media (max-width: 768px) {
-    .sidebar-container {
-        width: 180px; /* Adjust width for smaller screens */
-    }
-
-    .sidebar-container.minimized {
-        width: 60px; /* Maintain minimized state */
-    }
-
-    .sidebar-header {
-        font-size: 14px; /* Smaller title */
-        padding: 12px;
-    }
-
-    .sidebar-item {
-        padding: 8px 12px; /* Less padding */
-    }
-
-    .sidebar-text {
-        font-size: 14px;
-    }
-
-    .sidebar-icon {
-        font-size: 20px; /* Smaller icons */
-    }
-
-    .logout {
-        width: 180px; /* Adjust logout button */
-    }
-}
-
-/* For very small mobile screens */
-@media (max-width: 480px) {
-    .sidebar-container {
-        width: 150px; /* Narrow width on very small screens */
-    }
-
-    .sidebar-container.minimized {
-        width: 50px; /* Further minimize sidebar on very small screens */
-    }
-
-    .sidebar-header {
-        font-size: 12px; /* Smaller title */
-        padding: 10px;
-    }
-
-    .sidebar-text {
-        font-size: 12px;
-        display: none; /* Hide text in very small screens */
-    }
-
-    .sidebar-item {
-        padding: 6px 10px; /* Further reduce padding */
-    }
-
-    .sidebar-icon {
-        font-size: 18px; /* Smaller icons */
-    }
-
-    .logout {
-        width: 150px; /* Adjust logout button */
-    }
+.profile-icon-drop{
+  margin-right: 10px;
 }

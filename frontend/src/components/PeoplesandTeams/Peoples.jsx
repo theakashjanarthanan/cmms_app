@@ -131,7 +131,7 @@ const Peoples = ({ openAddDialog, handleCloseAddDialog, searchTerm }) => {
         }),
       );
 
-      setSnackbarMessage("Users added successfully!");
+      setSnackbarMessage("Users Invited successfully! Confirmation Mail Sent ");
       setSnackbarSeverity("success");
       setSnackbarOpen(true); // Open the Snackbar
       setUsers((prev) => [...prev, ...newUsers]); // Add new users to the list
