@@ -1,85 +1,167 @@
-// frontend/src/components/PeoplesAndTeamPage.jsx
-
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import { Box } from "@mui/material";
 
 import Sidebar from "../components/Sidebar";
-import { fetchUsers } from "../api/api"; // Import API
-import Teams from "../components/PeoplesandTeams/Teams"; // Import the TeamsPage Component
-import Peoples from "../components/PeoplesandTeams/Peoples"; // Import the UserManagement Component
- 
+import { fetchUsers, fetchTeams } from "../api/api"; // Import API
+import Teams from "../components/PeoplesandTeams/Teams";
+import Peoples from "../components/PeoplesandTeams/Peoples";
+import Header from "../components/Header/header";
+import DataToolbar from "../components/PeoplesandTeams/DataToolBar";
 
 const PeoplesAndTeamPage = () => {
-  const [setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [filteredTeams, setFilteredTeams] = useState([]);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
+  const sidebarWidth = isSidebarMinimized ? 5 : 250;
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  // Sidebar States
-  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false); // Sidebar minimized state
-  const sidebarWidth = isSidebarMinimized ? 70 : 250; // Sidebar width based on minimized state
-
-  // Pagination States
-  const [selectedTab, setSelectedTab] = useState(0); // State to manage selected tab
+  // Toolbar states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedColumns, setSelectedColumns] = useState(["fullName", "email", "role"]);
+  const availableColumns = ["fullName", "email", "role"];
+  const [selectedAccountType, setSelectedAccountType] = useState("Account Type");
 
   useEffect(() => {
     const getUsers = async () => {
       try {
         const usersData = await fetchUsers();
-        // Sort users by MongoDB _id (newest first)
-        const sortedUsers = usersData.sort((a, b) =>
-          b._id.localeCompare(a._id),
-        );
+        const sortedUsers = usersData.sort((a, b) => b._id.localeCompare(a._id));
         setUsers(sortedUsers);
+        setFilteredUsers(sortedUsers);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }
     };
 
-    getUsers();
-  }, [setUsers  ]);
+    const getTeams = async () => {
+      try {
+        const teamsData = await fetchTeams();
+        setTeams(teamsData);
+        setFilteredTeams(teamsData);
+      } catch (error) {
+        console.error("Failed to fetch teams:", error);
+      }
+    };
 
+    getUsers();
+    getTeams();
+  }, []);
+
+  useEffect(() => {
+    if (selectedAccountType !== "Account Type") {
+      setFilteredUsers(
+        users.filter(user => user.accountType === selectedAccountType)
+      );
+    } else {
+      setFilteredUsers(users); // If no account type is selected, show all users
+    }
+  }, [selectedAccountType, users]);
+
+  // Handle search filtering
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+
+    if (selectedTab === 0) {
+      setFilteredUsers(
+        users.filter(
+          (user) =>
+            user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.role.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredTeams(
+        teams.filter(
+          (team) =>
+            team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            team.description.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+  };
 
   // Handle tab change
   const handleTabChange = (event, newTab) => setSelectedTab(newTab);
 
-  // Toggle Sidebar minimized/maximized state
-  const toggleSidebar = () => {
-    setIsSidebarMinimized(!isSidebarMinimized);
+  // Toggle sidebar state
+  const toggleSidebar = () => setIsSidebarMinimized(!isSidebarMinimized);
+
+  // Column selection handlers
+  const handleColumnClick = (event) => setAnchorEl(event.currentTarget);
+  const handleColumnClose = () => setAnchorEl(null);
+  const handleColumnSelect = (column) => {
+    setSelectedColumns((prev) =>
+      prev.includes(column) ? prev.filter((c) => c !== column) : [...prev, column]
+    );
+  };
+
+  // Handle account type change from DataToolbar
+  const handleAccountTypeChange = (accountType) => {
+    setSelectedAccountType(accountType);
   };
 
   return (
     <Box sx={{ display: "flex" }}>
-      {/* Sidebar Component */}
       <Sidebar isMinimized={isSidebarMinimized} toggleSidebar={toggleSidebar} />
 
       <Box
         sx={{
           flexGrow: 1,
-          ml: `${sidebarWidth}px`, // Dynamically adjust margin-left based on sidebar width
-          transition: "margin-left 0.3s ease", // Smooth transition for layout changes
+          ml: `${sidebarWidth}px`,
+          transition: "margin-left 0.3s ease",
           p: 3,
         }}
       >
-        {/* Tabs for Peoples and Teams */}
-        <Tabs
-          value={selectedTab}
-          onChange={handleTabChange}
-          aria-label="Peoples and Teams tabs"
-        >
-          <Tab label="Peoples" />
-          <Tab label="Teams" />
-        </Tabs>
+        {/* Header Component */}
+        <Header
+          title={selectedTab === 0 ? "People" : "Teams"}
+          tabs={["People", "Teams"]}
+          selectedTab={selectedTab}
+          handleTabChange={handleTabChange}
+          toggleDrawer={toggleSidebar}
+          buttonText={selectedTab === 0 ? "Add People" : "Add Team"}
+          buttonAction={() => (selectedTab === 0 ? setOpenAddDialog(true) : setOpenDialog(true))}
+          sx={{ padding: "0" }}
+        />
+
+        {/* DataToolbar Component */}
+        <DataToolbar
+          filteredItems={selectedTab === 0 ? filteredUsers : filteredTeams}
+          totalItems={selectedTab === 0 ? users.length : teams.length}
+          searchTerm={searchTerm}
+          setSearchTerm={handleSearch}
+          handleColumnClick={handleColumnClick}
+          handleColumnClose={handleColumnClose}
+          anchorEl={anchorEl}
+          handleColumnSelect={handleColumnSelect}
+          selectedColumns={selectedColumns}
+          availableColumns={availableColumns}
+          title={selectedTab === 0 ? "Users" : "Teams"} // Ensure correct title
+          selectedAccountType={selectedAccountType} // Pass selected account type
+          setSelectedAccountType={handleAccountTypeChange} // Pass function to handle changes
+          sx={{ padding: "0" }}
+        />
 
         {/* Display Content Based on Selected Tab */}
         {selectedTab === 0 ? (
-          <div>
-            <Peoples/>
-          </div>
+          <Peoples
+            selectedAccountType={selectedAccountType} // Pass selectedAccountType to Peoples component
+            searchTerm={searchTerm}
+            openAddDialog={openAddDialog}
+            handleCloseAddDialog={() => setOpenAddDialog(false)}
+          />
         ) : (
-          // Render TeamsPage Component when Teams tab is selected
-          <Teams />
+          <Teams
+            searchTerm={searchTerm}
+            openDialog={openDialog}
+            handleCloseDialog={() => setOpenDialog(false)}
+          />
         )}
       </Box>
     </Box>

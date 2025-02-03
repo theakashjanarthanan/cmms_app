@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import {
   Typography,
   Button,
+  Divider,
   Dialog,
   DialogActions,
   DialogContent,
@@ -21,6 +22,7 @@ import {
   Paper,
   Snackbar,
   Alert,
+
 } from "@mui/material";
 
 import {
@@ -31,10 +33,12 @@ import {
   deleteTeam,
 } from "../../api/api";
 
+import { Add as AddIcon } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import ViewTeamDialog from "../PeoplesandTeams/ViewTeamDialog";
 
-const Teams = () => {
-  const [openDialog, setOpenDialog] = useState(false);
+const Teams = ({ openDialog, handleCloseDialog, searchTerm }) => {
+  const [setOpenDialog] = useState(false);
   const [openWorkersDialog, setOpenWorkersDialog] = useState(false);
   const [teamName, setTeamName] = useState("");
   const [teamDescription, setTeamDescription] = useState("");
@@ -54,8 +58,8 @@ const Teams = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // Handle opening and closing dialogs
-  const handleOpenDialog = () => setOpenDialog(true);
-  const handleCloseDialog = () => setOpenDialog(false);
+  // const handleOpenDialog = () => setOpenDialog(true);
+  // const handleCloseDialog = () => setOpenDialog(false);
   const handleOpenWorkersDialog = () => setOpenWorkersDialog(true);
   const handleCloseWorkersDialog = () => setOpenWorkersDialog(false);
 
@@ -279,23 +283,58 @@ const Teams = () => {
     setPage(0); // Reset page to 0 when rows per page is changed
   };
 
-  const paginatedTeams = teams.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage,
+  // Search Functionality for Teams
+  const filteredTeams = teams.filter(
+    (team) =>
+      team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      team.numberOfPeople.toString().includes(searchTerm)
   );
+
 
   return (
     <div>
 
       <br />
-
+      {/* 
       <Button variant="contained" color="primary" onClick={handleOpenDialog}>
         Add Team
-      </Button>
+      </Button> */}
 
       {/* Add Team Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Add Team</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+      >
+        <DialogTitle
+          style={{
+            fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Open Sans', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'",
+            fontSize: "24px",
+          }}
+        >
+          Add Team
+          <Button
+            onClick={handleCloseDialog}
+            color="primary"
+            style={{
+              position: "absolute",
+              minWidth: "auto",
+              padding: 0,
+              marginTop: "5px",
+              left: "550px",  // Adjust as needed
+              color: "black"
+            }}
+          >
+            <CloseIcon />
+          </Button>
+        </DialogTitle>
+
+        <Divider
+          orientation="vertical"
+          style={{
+            height: "1px",  // Set the height of the divider to match the dialog title's height
+            backgroundColor: "rgb(184, 184, 184)"  // Light color for the divider
+          }}
+        />
 
         <DialogContent>
           <TextField
@@ -339,7 +378,21 @@ const Teams = () => {
             maxWidth="sm"
             fullWidth
           >
-            <DialogTitle>Select Worker</DialogTitle>
+            <DialogTitle style={{
+              fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Open Sans', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'",
+              fontSize: "24px",
+            }}
+            >
+              Select Worker
+            </DialogTitle>
+
+            <Divider
+              orientation="vertical"
+              style={{
+                height: "1px",  // Set the height of the divider to match the dialog title's height
+                backgroundColor: "rgb(184, 184, 184)"  // Light color for the divider
+              }}
+            />
 
             <DialogContent>
               <TableContainer component={Paper}>
@@ -381,33 +434,85 @@ const Teams = () => {
               </TableContainer>
             </DialogContent>
 
-            <DialogActions sx={{ justifyContent: "center" }}>
+            <Divider
+              orientation="vertical"
+              style={{
+                height: "1px",  // Set the height of the divider to match the dialog title's height
+                backgroundColor: "rgb(184, 184, 184)"  // Light color for the divider
+              }}
+            />
+
+            <DialogActions style={{ gap: "10px", marginRight: "30px", marginTop: "15px" }} >
               <Button
                 onClick={handleCloseWorkersDialog}
-                variant="contained"
-                color="secondary"
+                color="white"
+                variant="outlined"
+                style={{
+                  border: "1px solid rgb(184, 184, 184)",
+                  fontSize: "16px",
+                  marginBottom: "20px",
+                  textTransform: "none",
+                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI (Custom)", Roboto, "Helvetica Neue", "Open Sans (Custom)", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+                }}
               >
                 Close
               </Button>
               <Button
                 onClick={handleDoneWorkers}
-                variant="contained"
                 color="primary"
+                variant="contained"
+                style={{
+                  marginBottom: "20px",
+                  fontSize: "16px",
+                  textTransform: "none",
+                  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI (Custom)", Roboto, "Helvetica Neue", "Open Sans (Custom)", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+                }}
               >
                 Done
               </Button>
             </DialogActions>
           </Dialog>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
+        <Divider
+          orientation="vertical"
+          style={{
+            height: "1px",  // Set the height of the divider to match the dialog title's height
+            backgroundColor: "rgb(184, 184, 184)"  // Light color for the divider
+          }}
+        />
+        <DialogActions style={{ gap: "10px", marginRight: "30px", marginTop: "15px" }} >
+          <Button
+            onClick={handleCloseDialog}
+            color="white"
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            style={{
+              border: "1px solid rgb(184, 184, 184)",
+              fontSize: "16px",
+              marginBottom: "20px",
+              textTransform: "none",
+              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI (Custom)", Roboto, "Helvetica Neue", "Open Sans (Custom)", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleCreateTeam} color="primary">
+          <Button
+            onClick={handleCreateTeam}
+            color="primary"
+            variant="contained"
+            startIcon={<AddIcon />}
+            style={{
+              marginBottom: "20px",
+              fontSize: "16px",
+              textTransform: "none",
+              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI (Custom)", Roboto, "Helvetica Neue", "Open Sans (Custom)", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+            }}
+          >
             Create Team
           </Button>
         </DialogActions>
       </Dialog>
+
 
       {/* Teams Table */}
       <TableContainer component={Paper} sx={{ marginTop: "20px" }}>
@@ -423,178 +528,171 @@ const Teams = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedTeams.length === 0 ? (
+            {filteredTeams.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} align="center">
-                  No teams available.
+                  No teams found.
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedTeams.map((team, index) => (
-                <TableRow key={team._id}>
-                  <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
-                  <TableCell>{team.name}</TableCell>
-                  <TableCell>{team.numberOfPeople}</TableCell>
-                  <TableCell>
-                    {team.createdAt
-                      ? format(new Date(team.createdAt), "MMMM dd, yyyy 'at' hh:mm:ss a")
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    {team.updatedAt
-                      ? format(new Date(team.updatedAt), "MMMM dd, yyyy 'at' hh:mm:ss a")
-                      : "N/A"}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleViewTeam(team)}
-                    >
-                      View
-                    </Button>
-
-                    {/* View Team Dialog */}
-                    {selectedTeam && (
-                      <ViewTeamDialog // Imported from TeamsComponents.jsx
-                        open={openViewDialog}
-                        onClose={handleCloseViewDialog}
-                        team={selectedTeam}
-                      />
-                    )}
-
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => handleOpenEditDialog(team)}
-                    >
-                      Update
-                    </Button>
-
-                    {/* Edit Team Dialog */}
-                    <Dialog
-                      open={openEditDialog}
-                      onClose={handleCloseEditDialog}
-                    >
-                      <DialogTitle>Edit Team</DialogTitle>
-                      <DialogContent>
-                        <TextField
-                          label="Team Name"
-                          value={teamName}
-                          onChange={(e) => setTeamName(e.target.value)}
-                          fullWidth
-                          margin="normal"
-                        />
-
-                        <TextField
-                          label="Description"
-                          value={teamDescription}
-                          onChange={(e) => setTeamDescription(e.target.value)}
-                          fullWidth
-                          margin="normal"
-                          multiline
-                          rows={4}
-                        />
-
-                        <TextField
-                          label="Workers"
-                          value={workersText}
-                          onClick={handleOpenWorkersDialog}
-                          fullWidth
-                          InputProps={{ readOnly: true }}
-                          margin="normal"
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          onClick={handleCloseEditDialog}
-                          color="secondary"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={() => setConfirmDialogOpen(true)}
-                          color="primary"
-                        >
-                          Update
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-
-                    {/* Update Confirmation Dialog */}
-                    <Dialog
-                      open={confirmDialogOpen}
-                      onClose={closeConfirmDialog}
-                    >
-                      <DialogTitle>Are you sure?</DialogTitle>
-                      <DialogContent>
-                        <Typography>
-                          Do you really want to update this team?
-                        </Typography>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={closeConfirmDialog} color="secondary">
-                          No
-                        </Button>
-                        <Button onClick={handleUpdateTeam} color="primary">
-                          Yes
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-
-                    <Button
-                      onClick={() => handleOpenDeleteDialog(team)}
-                      color="error"
-                      variant="contained"
-                    >
-                      Delete
-                    </Button>
-
-                    {/* Delete Confirmation Dialog */}
-                    <Dialog
-                      open={openDeleteDialog}
-                      onClose={handleCloseDeleteDialog}
-                    >
-                      <DialogTitle>
-                        Are you sure you want to delete this team?
-                      </DialogTitle>
-                      <DialogContent>
-                        <p>This action cannot be undone.</p>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          onClick={handleCloseDeleteDialog}
-                          color="primary"
-                        >
-                          No
-                        </Button>
-                        <Button onClick={handleDeleteTeam} color="error">
-                          Yes, Delete
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-
-                    {/* Snackbar Notifications */}
-                    <Snackbar
-                      open={openSnackbar}
-                      autoHideDuration={6000}
-                      onClose={() => setOpenSnackbar(false)}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "center",
-                      }}
-                    >
-                      <Alert
-                        onClose={() => setOpenSnackbar(false)}
-                        severity={snackbarSeverity}
-                        sx={{ width: "100%" }}
+              filteredTeams
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((team, index) => (
+                  <TableRow key={team._id}>
+                    <TableCell>{index + 1 + page * rowsPerPage}</TableCell>
+                    <TableCell>{team.name}</TableCell>
+                    <TableCell>{team.numberOfPeople}</TableCell>
+                    <TableCell>
+                      {team.createdAt
+                        ? format(new Date(team.createdAt), "MMMM dd, yyyy 'at' hh:mm:ss a")
+                        : "N/A"}
+                    </TableCell>
+                    <TableCell>
+                      {team.updatedAt
+                        ? format(new Date(team.updatedAt), "MMMM dd, yyyy 'at' hh:mm:ss a")
+                        : "N/A"}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleViewTeam(team)}
                       >
-                        {snackbarMessage}
-                      </Alert>
-                    </Snackbar>
-                  </TableCell>
-                </TableRow>
-              ))
+                        View
+                      </Button>
+
+                      {/* View Team Dialog */}
+                      {selectedTeam && (
+                        <ViewTeamDialog
+                          open={openViewDialog}
+                          onClose={handleCloseViewDialog}
+                          team={selectedTeam}
+                        />
+                      )}
+
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleOpenEditDialog(team)}
+                      >
+                        Update
+                      </Button>
+
+                      {/* Edit Team Dialog */}
+                      <Dialog
+                        open={openEditDialog}
+                        onClose={handleCloseEditDialog}
+                      >
+                        <DialogTitle>Edit Team</DialogTitle>
+                        <DialogContent>
+                          <TextField
+                            label="Team Name"
+                            value={teamName}
+                            onChange={(e) => setTeamName(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                          />
+
+                          <TextField
+                            label="Description"
+                            value={teamDescription}
+                            onChange={(e) => setTeamDescription(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            multiline
+                            rows={4}
+                          />
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            onClick={handleCloseEditDialog}
+                            color="secondary"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => setConfirmDialogOpen(true)}
+                            color="primary"
+                          >
+                            Update
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
+                      {/* Update Confirmation Dialog */}
+                      <Dialog
+                        open={confirmDialogOpen}
+                        onClose={closeConfirmDialog}
+                      >
+                        <DialogTitle>Are you sure?</DialogTitle>
+                        <DialogContent>
+                          <Typography>
+                            Do you really want to update this team?
+                          </Typography>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={closeConfirmDialog} color="secondary">
+                            No
+                          </Button>
+                          <Button onClick={handleUpdateTeam} color="primary">
+                            Yes
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
+                      <Button
+                        onClick={() => handleOpenDeleteDialog(team)}
+                        color="error"
+                        variant="contained"
+                      >
+                        Delete
+                      </Button>
+
+                      {/* Delete Confirmation Dialog */}
+                      <Dialog
+                        open={openDeleteDialog}
+                        onClose={handleCloseDeleteDialog}
+                      >
+                        <DialogTitle>
+                          Are you sure you want to delete this team?
+                        </DialogTitle>
+                        <DialogContent>
+                          <p>This action cannot be undone.</p>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            onClick={handleCloseDeleteDialog}
+                            color="primary"
+                          >
+                            No
+                          </Button>
+                          <Button onClick={handleDeleteTeam} color="error">
+                            Yes, Delete
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
+                      {/* Snackbar Notifications */}
+                      <Snackbar
+                        open={openSnackbar}
+                        autoHideDuration={6000}
+                        onClose={() => setOpenSnackbar(false)}
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "center",
+                        }}
+                      >
+                        <Alert
+                          onClose={() => setOpenSnackbar(false)}
+                          severity={snackbarSeverity}
+                          sx={{ width: "100%" }}
+                        >
+                          {snackbarMessage}
+                        </Alert>
+                      </Snackbar>
+                    </TableCell>
+                  </TableRow>
+                ))
             )}
           </TableBody>
         </Table>
@@ -602,15 +700,14 @@ const Teams = () => {
 
       {/* Table Pagination */}
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]} // Options for number of rows per page
+        rowsPerPageOptions={[5, 10, 25, 50]} // Options for number of rows per page
         component="div"
-        count={teams.length} // Total number of teams
+        count={filteredTeams.length} // Total number of filtered teams
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage} // Update page number
         onRowsPerPageChange={handleChangeRowsPerPage} // Update rows per page
         labelRowsPerPage="Rows per page" // Custom label for rows per page dropdown
-        // Limiting maximum pages to 10
         SelectProps={{
           inputProps: { "aria-label": "rows per page" },
           native: true,

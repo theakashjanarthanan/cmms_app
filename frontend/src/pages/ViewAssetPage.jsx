@@ -217,42 +217,102 @@ const ViewAssetPage = () => {
         </div>
 
         {selectedTab === 0 && (
-          <Grid container spacing={2}>
-            {[{ label: "Asset Name", value: asset.name },
-              { label: "Status", value: asset.status },
-              { label: "Model", value: asset.model },
-              { label: "Manufacturer", value: asset.manufacturer },
-              { label: "Serial Number", value: asset.serialNumber },
-              { label: "Category", value: asset.category },
-              { label: "Description", value: asset.description },
-              { label: "Created At", value: new Date(asset.createdAt).toLocaleString("en-US", {
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: true,
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }) },
-              { label: "Updated At", value: new Date(asset.updatedAt).toLocaleString("en-US", {
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: true,
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }) },
-            ].map((item, index) => (
-              <Grid item xs={12} key={index}>
-                <Box sx={{ display: "flex", alignItems: "center", paddingLeft: "20px" }}>
-                  <Typography sx={{ width: "150px", color: "grey" }}>{item.label}:</Typography>
-                  <Typography sx={{ marginLeft: "20px" }}>{item.value}</Typography>
-                </Box>
-                <hr />
-              </Grid>
-            ))}
-          </Grid>
+    <Grid container spacing={3.5} paddingTop={2} paddingLeft={1}>
+    {/* Asset Information Title with Bottom Border */}
+    <Grid item xs={12}>
+      <Box
+        sx={{
+          fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif",
+          fontOpticalSizing: "auto",
+          paddingX: "20px", // Ensures title and first row align
+        }}
+      >
+        <Typography 
+          sx={{ 
+            color: "#323233", 
+            textAlign: "left", 
+            fontSize: "16px",
+            paddingBottom: "12px",
+            paddingTop: "12px",
+            fontWeight: "600",
+          }}
+        >
+          Asset Information
+        </Typography>
+  
+        {/* Bottom Border */}
+        <Box
+          sx={{
+            width: "100%", 
+            height: "1px",
+            backgroundColor: "rgb(223, 227, 232)"
+          }}
+        />
+      </Box>
+    </Grid>
+  
+    {/* Asset Details */}
+    {[
+      { label: "Name", value: asset.name },
+      { label: "Status", value: asset.status },
+      { label: "Model", value: asset.model },
+      { label: "Manufacturer", value: asset.manufacturer },
+      { label: "Serial Number", value: asset.serialNumber },
+      { label: "Category", value: asset.category },
+      { label: "Description", value: asset.description },
+      { label: "Created At", value: new Date(asset.createdAt).toLocaleString("en-US", {
+        hour: "numeric", minute: "numeric", second: "numeric", hour12: true,
+        year: "numeric", month: "long", day: "numeric",
+      }) },
+      { label: "Updated At", value: new Date(asset.updatedAt).toLocaleString("en-US", {
+        hour: "numeric", minute: "numeric", second: "numeric", hour12: true,
+        year: "numeric", month: "long", day: "numeric",
+      }) },
+    ].map((item, index) => (
+      <Grid item xs={12} key={index}>
+        <Box 
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "200px auto", // Ensures even spacing between name and value
+            alignItems: "center",
+            width: "100%",
+            paddingX: "20px", // Ensures names align with title
+            fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI (Custom)', Roboto, 'Helvetica Neue', 'Open Sans (Custom)', system-ui, sans-serif",
+          }}
+        >
+          <Typography 
+            component="span" 
+            sx={{ 
+              color: "grey", 
+              textAlign: "left", 
+              fontWeight: "normal",
+            }}
+          >
+            {item.label}
+          </Typography>
+          <Typography 
+            component="span" 
+            sx={{ 
+              color: "#212121", 
+              textAlign: "left",
+            }}
+          >
+            {item.value}
+          </Typography>
+        </Box>
+  
+        {/* Horizontal Line for Each Row */}
+        <Box
+          sx={{
+            width: "calc(100% - 40px)", 
+            height: "1px",
+            backgroundColor: "rgb(223, 227, 232)",
+            marginX: "20px"
+          }}
+        />
+      </Grid>
+    ))}
+  </Grid>
         )}
 
         {selectedTab === 1 && (

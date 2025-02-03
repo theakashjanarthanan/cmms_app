@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
+  Divider,
   Typography,
   Table,
   TableBody,
@@ -17,6 +18,7 @@ import {
   DialogContent,
   DialogTitle,
   TablePagination,
+  Menu,
   MenuItem,
   Select,
   FormControl,
@@ -24,6 +26,8 @@ import {
   TextField,
   Snackbar,
   Alert,
+  Grid,
+  IconButton
 } from "@mui/material";
 
 import { format } from "date-fns";
@@ -36,8 +40,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 
-
-const Peoples = () => {
+const Peoples = ({ openAddDialog, handleCloseAddDialog, searchTerm }) => {
   const [users, setUsers] = useState([]); // Users for table
   const [selectedUser, setSelectedUser] = useState(null); // Selected user for editing
   const [openEditDialog, setOpenEditDialog] = useState(false); // State for Edit Dialog
@@ -52,9 +55,12 @@ const Peoples = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // 'success' or 'error'
+  const [selectedRole, setSelectedRole] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+
 
   // Add User functionality
-  const [openAddDialog, setOpenAddDialog] = useState(false);
+
   const [newUsers, setNewUsers] = useState([
     { fullName: "", email: "", password: "", role: "Guest" },
   ]);
@@ -81,14 +87,14 @@ const Peoples = () => {
   }, []);
 
   // Handle the Add User dialog open/close
-  const handleOpenAddDialog = () => {
-    setOpenAddDialog(true);
-  };
+  // const handleOpenAddDialog = () => {
+  //   setOpenAddDialog(true);
+  // };
 
-  const handleCloseAddDialog = () => {
-    setOpenAddDialog(false);
-    setNewUsers([{ fullName: "", email: "", password: "", role: "Guest" }]); // Reset form
-  };
+  // const handleCloseAddDialog = () => {
+  //   setOpenAddDialog(false);
+  //   setNewUsers([{ fullName: "", email: "", password: "", role: "Guest" }]); // Reset form
+  // };
 
   // Handle the form field changes for Add User
   const handleInputChange = (index, e) => {
@@ -223,19 +229,43 @@ const Peoples = () => {
     }
   };
 
+  // Function to handle the deletion of the last user added
+  const handleDeleteLastUser = () => {
+    if (newUsers.length > 1) {
+      const updatedUsers = [...newUsers];
+      updatedUsers.pop(); // Remove the last user from the list
+      setNewUsers(updatedUsers); // Update the state with the new list
+    }
+  };
+
+  // Search Functionality
+  const filteredUsers = users.filter(
+    (user) =>
+      (selectedRole ? user.role.toLowerCase() === selectedRole.toLowerCase() : true) &&
+      (user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.role.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  // Open dropdown menu
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Close dropdown menu
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+    // Handle option selection
+    const handleSelectOption = (role) => {
+      setSelectedRole(role);
+      handleClose();
+    };
+
   return (
     <div>
       <br />
-
-      {/* Add User Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenAddDialog}
-        startIcon={<AddIcon />}
-      >
-        Add Peoples
-      </Button>
 
       <Snackbar
         open={snackbarOpen}
@@ -255,6 +285,44 @@ const Peoples = () => {
         </Alert>
       </Snackbar>
 
+      {/* Account Type Filter */}
+      <Button
+        className="button sc-bYSBpT eAuzXa"
+        type="button"
+        onClick={handleClick}
+        style={{ marginRight: "auto", marginLeft: "10px", gap: "10px" }}
+      >
+        <div className="icon-outer icon-before sc-dnqmqq bAdjVm">
+          <div className="icon icon-controls icon-before sc-kAzzGY gZSYFh sc-bxivhb eykofB" fill="black" strokeWidth="0">
+            <svg width="16" height="16" viewBox="0 0 24 24.001" xmlns="http://www.w3.org/2000/svg" fill="black" strokeWidth="0">
+              <path fillRule="evenodd" clipRule="evenodd" d="M9 7a1 1 0 100 2 1 1 0 000-2zM6 8a3 3 0 116 0 3 3 0 01-6 0z"></path>
+              <path fillRule="evenodd" clipRule="evenodd" d="M2 8a1 1 0 011-1h4a1 1 0 010 2H3a1 1 0 01-1-1zM10 8a1 1 0 011-1h10a1 1 0 110 2H11a1 1 0 01-1-1zM15 15a1 1 0 100 2 1 1 0 000-2zm-3 1a3 3 0 116 0 3 3 0 01-6 0z"></path>
+              <path fillRule="evenodd" clipRule="evenodd" d="M2 16a1 1 0 011-1h10a1 1 0 110 2H3a1 1 0 01-1-1zM16 16a1 1 0 011-1h4a1 1 0 110 2h-4a1 1 0 01-1-1z"></path>
+            </svg>
+          </div>
+        </div>
+
+        <span className="sc-jDwBTQ emnDFx sc-jAaTju cSYAxM sc-eNQAEJ gLwsew" dataFor="false">
+         {selectedRole || "Account Type"} 
+        </span>
+
+        <div className="icon-outer icon-after sc-dnqmqq bAdjVm">
+          <div className="icon icon-chevronDown icon-after sc-kAzzGY gpxkJv sc-bxivhb eykofB" strokeWidth="0">
+            <svg viewBox="0 -1 24 24" xmlns="http://www.w3.org/2000/svg" width="16" height="16" strokeWidth="0">
+              <path fillRule="evenodd" clipRule="evenodd" d="M18.707 8.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 011.414-1.414L12 13.586l5.293-5.293a1 1 0 011.414 0z"></path>
+            </svg>
+          </div>
+        </div>
+      </Button>
+
+      {/* Account Type Dropdown Menu */}
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+        <MenuItem onClick={() => handleSelectOption("Admin")}>Admin</MenuItem>
+        <MenuItem onClick={() => handleSelectOption("Requestor")}>Requestor</MenuItem>
+        <MenuItem onClick={() => handleSelectOption("Technician")}>Technician</MenuItem>
+        <MenuItem onClick={() => handleSelectOption("Guest")}>Guest</MenuItem>
+      </Menu>
+
       {/* Users Table */}
       <TableContainer
         component={Paper}
@@ -273,14 +341,14 @@ const Peoples = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.length === 0 ? (
+            {filteredUsers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} align="center" className="no-data">
-                  No users available.
+                <TableCell colSpan={7} align="center" className="no-data">
+                  No users found.
                 </TableCell>
               </TableRow>
             ) : (
-              users
+              filteredUsers
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((user, index) => (
                   <TableRow
@@ -331,7 +399,7 @@ const Peoples = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, 50]}
         component="div"
-        count={users.length}
+        count={filteredUsers.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -403,10 +471,38 @@ const Peoples = () => {
         onClose={handleCloseAddDialog}
         fullWidth
       >
-        <DialogTitle >Add User</DialogTitle>
+
+        <DialogTitle style={{
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Open Sans', system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'",
+          fontSize: "24px",
+        }}>
+          Add User
+          <Button
+            onClick={handleCloseAddDialog}
+            color="primary"
+            style={{
+              position: "absolute",
+              minWidth: "auto",
+              padding: 0,
+              marginTop: "5px",
+              left: "550px",
+              color: "black"
+            }}
+          >
+            <CloseIcon />
+          </Button>
+        </DialogTitle>
+        <Divider
+          orientation="vertical"
+          style={{
+            height: "1px",  // Set the height of the divider to match the dialog title's height
+            backgroundColor: "rgb(184, 184, 184)"  // Light color for the divider
+          }}
+        />
         <DialogContent>
           {newUsers.map((user, index) => (
             <Box key={index}>
+
               <TextField
                 label="Full Name"
                 name="fullName"
@@ -415,14 +511,36 @@ const Peoples = () => {
                 fullWidth
                 margin="normal"
               />
-              <TextField
-                label="Email"
-                name="email"
-                value={user.email}
-                onChange={(e) => handleInputChange(index, e)}
-                fullWidth
-                margin="normal"
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Email"
+                    name="email"
+                    value={user.email}
+                    onChange={(e) => handleInputChange(index, e)}
+                    fullWidth
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Role</InputLabel>
+                    <Select
+                      value={user.role}
+                      name="role"
+                      onChange={(e) => handleInputChange(index, e)}
+                      label="Role"
+                    >
+                      {roles.map((roleOption) => (
+                        <MenuItem key={roleOption} value={roleOption}>
+                          {roleOption}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+
               <TextField
                 label="Password"
                 name="password"
@@ -432,47 +550,69 @@ const Peoples = () => {
                 fullWidth
                 margin="normal"
               />
-              <FormControl
-                fullWidth
-                margin="normal"
-              >
-                <InputLabel>Role</InputLabel>
-                <Select
-                  value={user.role}
-                  name="role"
-                  onChange={(e) => handleInputChange(index, e)}
-                  label="Role"
-                >
-                  {roles.map((roleOption) => (
-                    <MenuItem key={roleOption} value={roleOption}>
-                      {roleOption}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
             </Box>
           ))}
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleAddAnotherUser}
-            startIcon={<AddIcon />}
-          >
-            Add Another User
-          </Button>
+
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Button
+              variant="outlined"
+              color="white"
+              onClick={handleAddAnotherUser}
+              startIcon={<AddIcon />}
+              style={{ border: "1px solid rgb(184, 184, 184)", marginTop: "20px" }}
+            >
+              Add Another User
+            </Button>
+
+            {/* Delete Last User Button */}
+            {newUsers.length > 1 && (
+              <IconButton
+                color="secondary"
+                onClick={handleDeleteLastUser}
+                style={{ marginLeft: '10px', color: "rgb(224, 30, 90", marginTop: "20px" }}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="red" xmlns="http://www.w3.org/2000/svg" stroke-width="0">
+                  <path clip-rule="evenodd" d="M9.293 4.293A1 1 0 0110 4h4a1 1 0 011 1v1H9V5a1 1 0 01.293-.707zM7 6V5a3 3 0 013-3h4a3 3 0 013 3v1h3a1 1 0 110 2h-1v11a3 3 0 01-3 3H8a3 3 0 01-3-3V8H4a1 1 0 010-2h3zm0 2v11a1 1 0 001 1h8a1 1 0 001-1V8H7z"></path>
+                </svg>
+              </IconButton>
+            )}
+
+          </Box>
         </DialogContent>
-        <DialogActions>
+        <Divider
+          orientation="vertical"
+          style={{
+            height: "1px",  // Set the height of the divider to match the dialog title's height
+            backgroundColor: "rgb(184, 184, 184)"  // Light color for the divider
+          }}
+        />
+        <DialogActions style={{ gap: "10px", marginRight: "30px", marginTop: "15px" }} >
           <Button
             onClick={handleCloseAddDialog}
-            color="primary"
+            color="white"
+            variant="outlined"
             startIcon={<CloseIcon />}
+            style={{
+              border: "1px solid rgb(184, 184, 184)",
+              fontSize: "16px",
+              marginBottom: "20px",
+              textTransform: "none",
+              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI (Custom)", Roboto, "Helvetica Neue", "Open Sans (Custom)", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+            }}
           >
             Cancel
           </Button>
           <Button
             onClick={handleAddUsers}
             color="primary"
+            variant="contained"
             startIcon={<AddIcon />}
+            style={{
+              marginBottom: "20px",
+              fontSize: "16px",
+              textTransform: "none",
+              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI (Custom)", Roboto, "Helvetica Neue", "Open Sans (Custom)", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+            }}
           >
             Add Users
           </Button>

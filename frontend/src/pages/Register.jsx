@@ -1,5 +1,3 @@
-// frontend\src\components\Register.jsx
-
 import React, { useState } from "react";
 import {
   TextField,
@@ -19,7 +17,7 @@ const Register = () => {
     password: "",
     role: "Guest",
   });
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate(); // Initialize navigate hook
 
   const handleChange = (e) =>
@@ -29,9 +27,8 @@ const Register = () => {
     e.preventDefault();
     try {
       // Send registration request to backend
-
       await API.post("/auth/register", formData);
-      setMessage("Registration Successful. Proceed with Login");
+      setError("Registration Successful. Proceed with Login");
 
       // Redirect to login page after successful registration
       setTimeout(() => {
@@ -39,87 +36,119 @@ const Register = () => {
       }, 2000);
     } catch (err) {
       if (err.response && err.response.data.message === "User already exists") {
-        setMessage("User already exists. Please try with a different email.");
+        setError("User already exists.");
       } else {
-        setMessage("Registration Failed");
+        setError("Registration Failed");
       }
     }
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" mt={5}>
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" bgcolor="#f5f5f5">
+      <Box display="flex" flexDirection="column" alignItems="flex-start" width="400px" p={4} borderRadius={2} boxShadow={3} bgcolor="white">
+        {/* Logo & Title in the same row */}
+        <Box display="flex" alignItems="center" width="100%" mb={2}>
+          <img src="/Images/settings.ico" alt="App Logo" width="40" style={{ marginRight: "10px" }} />
 
-      <Typography variant="h4" gutterBottom>
-        Register
-      </Typography>
-      {message && (
-        <Typography
-          color={message.includes("Successful") ? "success" : "error"}
-        >
-          {message}
-        </Typography>
-      )}
+          {/* Register Title */}
+          <h2
+            style={{
+              fontSize: "25px",
+              fontWeight: "600",
+              lineHeight: "24px",
+              color: "rgb(50, 50, 51)",
+              whiteSpace: "nowrap",
+              paddingBottom: "8px",
+            }}
+          >
+            Register Here
+          </h2>
+        </Box>
 
-      <Box component="form" onSubmit={handleSubmit} width="300px">
+        {/* Display success or error message */}
+        {error && (
+          <Typography color={error.includes("Successful") ? "success" : "error"} textAlign="center" mb={2}>
+            {error}
+          </Typography>
+        )}
 
-            <TextField
-                fullWidth
-                label="Full Name"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                margin="normal"
-            />
+        <Box component="form" onSubmit={handleSubmit} width="100%">
+          <TextField
+            fullWidth
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleChange}
+            margin="normal"
+            required
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            margin="normal"
+            required
+          />
+          <TextField
+            fullWidth
+            type="password"
+            label="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            margin="normal"
+            required
+          />
 
-            <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                margin="normal"
-            />
+          <TextField
+            fullWidth
+            select
+            label="Role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            margin="normal"
+            required
+          >
+            {["Admin", "Requestor", "Technician", "Guest"].map((role) => (
+              <MenuItem key={role} value={role}>
+                {role}
+              </MenuItem>
+            ))}
+          </TextField>
 
-            <TextField
-                fullWidth
-                type="password"
-                label="Password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                margin="normal"
-            />
-
-            <TextField
-                fullWidth
-                select
-                label="Role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                margin="normal"
-                >
-                {[
-                    "Admin",
-                    "Requestor",
-                    "Technician",
-                    "Guest",
-                ].map((role) => (
-                    <MenuItem key={role} value={role}>
-                    {role}
-                    </MenuItem>
-                ))}
-            </TextField>
-
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-                Register
+          <Box width="100%" sx={{ mt: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{
+                py: 1.5,
+                pointerEvents: !formData.fullName || !formData.email || !formData.password ? "none" : "auto", // Disable when any field is empty
+                "&:hover": {
+                  backgroundColor: formData.fullName && formData.email && formData.password ? "#00509E" : "#d1d1d1", // Dark blue hover effect
+                },
+              }}
+              disabled={!formData.fullName || !formData.email || !formData.password}
+            >
+              Register
             </Button>
+          </Box>
+        </Box>
+
+        <Box width="100%" mt={3} mb={1}>
+          <hr style={{ border: "none", height: "1px", backgroundColor: "#ddd" }} />
+        </Box>
+
+        <Typography variant="body2" color="textSecondary" textAlign="center">
+          Already have an account?{" "}
+          <Link href="/login" underline="hover">
+            Login →
+          </Link>
+        </Typography>
       </Box>
-
-      <Link href="/login" underline="hover" mt={2}>
-        Already have an account? Login
-      </Link>
-
     </Box>
   );
 };

@@ -1,30 +1,8 @@
-import React, { useState } from "react";
-import { Box, Button, Typography, Menu, MenuItem, IconButton, Tabs, Tab } from "@mui/material";
+import React from "react";
+import { Box, Button, Typography, Tabs, Tab, Divider } from "@mui/material";
 import { MoreHorizontal } from "lucide-react"; // Ensure you're using lucide-react for the MoreHorizontal icon
 
-const Header = ({
-  title,
-  toggleDrawer,
-  buttonText,
-  buttonAction,
-  menuItems,
-  tabs,
-  selectedTab,
-  handleTabChange,
-  children,
-}) => {
-  const [anchorEl, setAnchorEl] = useState(null); // State for the three-dot menu
-
-  // Open the Menu
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  // Close the Menu
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
+const Header = ({ title, toggleDrawer, buttonText, buttonAction, tabs, selectedTab, handleTabChange, children }) => {
   const handleMenuClick = () => {
     toggleDrawer(false); // Close the sidebar when clicking the menu
   };
@@ -44,7 +22,14 @@ const Header = ({
         borderBottom: "1px solid rgb(229, 229, 234)",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          flexGrow: 1,
+        }}
+      >
         {/* Toggle Sidebar */}
         <Button
           variant="text"
@@ -94,6 +79,10 @@ const Header = ({
           {title}
         </Typography>
 
+       {/* Divider separating title from tabs
+        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} /> */}
+
+
         {/* Dynamically add Tabs next to the title */}
         {tabs && (
           <Tabs
@@ -109,50 +98,51 @@ const Header = ({
         )}
       </Box>
 
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", flexGrow: 1 }}>
-        {/* Action Button */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          flexGrow: 1,
+        }}
+      >
+        {/* Button for adding user */}
         <Button
           variant="contained"
           color="primary"
           sx={{
             height: "36px",
+            width: "160px",
             padding: "8px 16px",
-            fontSize: "16px",
+            fontSize: "15px",
             lineHeight: "20px",
-            fontWeight: "normal",
+            fontWeight: "600",
             backgroundColor: "rgb(12, 111, 249)",
             color: "rgb(255, 255, 255)",
             borderRadius: "4px",
-            textTransform: "none",
-            cursor: "pointer",
-            transition: "background-color 250ms",
-            marginRight: "20px",
-            "&:hover": { backgroundColor: "rgb(10, 100, 230)" },
+            marginRight: "14px",
+            "&:hover": {
+              backgroundColor: "rgb(8, 85, 200)",
+            },
           }}
           onClick={buttonAction}
         >
           {buttonText}
         </Button>
 
-        {/* Three-Dot Menu Button */}
-        <IconButton onClick={handleMenuOpen}>
-          <MoreHorizontal className="h-6 w-6 text-gray-600" />
-        </IconButton>
-
-        {/* Dropdown Menu */}
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-          {menuItems && menuItems.map((item, index) => (
-            <MenuItem key={index} onClick={() => { item.onClick(); handleMenuClose(); }}>
-              {item.label}
-            </MenuItem>
-          ))}
-        </Menu>
+        {/* Three Dot Menu */}
+        <div className="relative">
+          <button className="p-2 pr-6 rounded-full hover:bg-white-200">
+            <MoreHorizontal className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
       </Box>
 
-      {/* Render the children passed to the Header */}
+      {/* Render the children passed to the Header (in this case, dynamic content below) */}
       {children}
     </Box>
   );
 };
 
 export default Header;
+ 
